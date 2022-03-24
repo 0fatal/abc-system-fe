@@ -11,20 +11,8 @@ const routes = [
         component: Layout,
         children: [
             {
-                path: '/publish',
-                component: () => import('@/views/publish/index.vue'),
-            },
-            {
-                path: '/profile',
-                component: () => import('@/views/profile/index.vue'),
-            },
-            {
-                path: '/article',
-                component: () => import('@/views/article/index.vue'),
-            },
-            {
                 path: '/',
-                component: () => import('@/views/home/index.vue'),
+                component: () => import('@/views/common/index.vue'),
             },
         ],
     },

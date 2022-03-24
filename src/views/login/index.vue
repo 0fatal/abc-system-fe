@@ -19,6 +19,7 @@
                     </el-form-item>
                     <el-form-item label="密码" prop="password">
                         <el-input
+                            type="password"
                             v-model="form.password"
                             placeholder="请输入密码"
                         ></el-input>
@@ -41,8 +42,8 @@ export default {
     data() {
         return {
             form: {
-                username: '',
-                password: '',
+                username: 'p001',
+                password: '123456',
             },
             rules: {
                 username: [

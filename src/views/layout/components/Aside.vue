@@ -9,21 +9,20 @@
         :default-active="$route.path"
         router
     >
+        <header class="text-white p-5 border-b border-slate-400">
+            委培学院ABC系统
+        </header>
         <el-menu-item index="/">
-            <i class="el-icon-menu"></i>
-            <span slot="title">首页</span>
+            <span slot="title">菜单1</span>
         </el-menu-item>
         <el-menu-item index="/publish">
-            <i class="el-icon-document"></i>
-            <span slot="title">发布文章</span>
+            <span slot="title">菜单2</span>
         </el-menu-item>
         <el-menu-item index="/article">
-            <i class="el-icon-setting"></i>
-            <span slot="title">文章列表</span>
+            <span slot="title">菜单3</span>
         </el-menu-item>
         <el-menu-item index="/profile">
-            <i class="el-icon-setting"></i>
-            <span slot="title">我的信息</span>
+            <span slot="title">菜单4</span>
         </el-menu-item>
     </el-menu>
 </template>
