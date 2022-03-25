@@ -1,6 +1,7 @@
 import { doLogin } from '@/fake/user'
 import Vue from 'vue'
 import Vuex from 'vuex'
+import { roleMap } from '@/role/role'
 
 Vue.use(Vuex)
 
@@ -20,6 +21,9 @@ const store = new Vuex.Store({
             return !!state.role
         },
         nickname: (state) => state.nickname,
+        getRoutes: (state) => {
+            return roleMap[state.role].routes
+        },
     },
     mutations: {
         setRole(state, role) {

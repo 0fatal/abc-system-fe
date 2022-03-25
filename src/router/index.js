@@ -11,8 +11,20 @@ const routes = [
         component: Layout,
         children: [
             {
-                path: '/',
+                path: '/assets/office',
                 component: () => import('@/views/common/index.vue'),
+            },
+            {
+                path: '/assets/college',
+                component: () => import('@/views/common/index.vue'),
+            },
+            {
+                path: '/assets/standard',
+                component: () => import('@/views/common/index.vue'),
+            },
+            {
+                path: '/assets/export',
+                component: () => import('@/views/export/index.vue'),
             },
         ],
     },

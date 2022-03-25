@@ -9,26 +9,25 @@
         :default-active="$route.path"
         router
     >
-        <header class="text-white p-5 border-b border-slate-400">
-            委培学院ABC系统
-        </header>
-        <el-menu-item index="/">
-            <span slot="title">菜单1</span>
-        </el-menu-item>
-        <el-menu-item index="/publish">
-            <span slot="title">菜单2</span>
-        </el-menu-item>
-        <el-menu-item index="/article">
-            <span slot="title">菜单3</span>
-        </el-menu-item>
-        <el-menu-item index="/profile">
-            <span slot="title">菜单4</span>
+        <header class="text-yellow-300 p-5">委培学院ABC系统</header>
+        <el-menu-item
+            v-for="route in $store.getters.getRoutes"
+            :key="route"
+            :index="route"
+        >
+            <span slot="title">{{ routeMap[route] }}</span>
         </el-menu-item>
     </el-menu>
 </template>
 
 <script>
+import { Route2MenuItemNameMap } from '@/role/role'
 export default {
+    data() {
+        return {
+            routeMap: Route2MenuItemNameMap,
+        }
+    },
     methods: {
         handleOpen(key, keyPath) {
             console.log(key, keyPath)
@@ -37,11 +36,16 @@ export default {
             console.log(key, keyPath)
         },
     },
+
+    mounted() {},
 }
 </script>
 
 <style>
 .tac {
     height: 100%;
+}
+.menu > header {
+    border-bottom: 1px solid #999;
 }
 </style>
