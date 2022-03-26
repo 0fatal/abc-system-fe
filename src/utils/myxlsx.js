@@ -1,4 +1,5 @@
 import * as xlsx from 'xlsx'
+import { read } from 'xlsx'
 
 export const parseXLSXFile = (path) => {
     console.log(path)
@@ -6,13 +7,13 @@ export const parseXLSXFile = (path) => {
         const reader = new FileReader()
         console.log(reader)
 
-        reader.readAsDataURL(path)
         reader.onload = (e) => {
             const data = e.target.result
             const workbook = xlsx.read(data, { type: 'binary' })
             console.log(workbook.Sheets)
             resolve(workbook)
         }
+        reader.readAsBinaryString(path)
     })
 }
 

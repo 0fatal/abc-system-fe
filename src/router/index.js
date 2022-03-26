@@ -11,6 +11,10 @@ const routes = [
         component: Layout,
         children: [
             {
+                path: '/',
+                redirect: '/assets/office',
+            },
+            {
                 path: '/assets/office',
                 component: () => import('@/views/common/index.vue'),
             },

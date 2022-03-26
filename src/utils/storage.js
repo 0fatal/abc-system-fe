@@ -2,6 +2,11 @@ import { roleMap } from '@/role/role'
 
 export const getIsInput = (role) => {
     console.log(role)
+    if (role === 'staffDirector') {
+        if (!localStorage.getItem(`abc/member`)) {
+            return false
+        }
+    }
     for (const route of roleMap[role].routes) {
         console.log(route)
         if (route === '/assets/export') continue
