@@ -24,7 +24,7 @@
                     size="mini"
                     @click="handleImportMember"
                     v-if="
-                        $route.path === '/assets/college' &&
+                        $route.path === '/assets/office' &&
                         $store.getters.getRole === 'staffDirector'
                     "
                     >导入人员名单</el-button
@@ -56,7 +56,7 @@
 
             <template v-if="$route.path !== '/assets/standard'">
                 <el-form-item
-                    v-for="item in form.items"
+                    v-for="(item, index) in form.items"
                     :key="item.name"
                     size="mini"
                 >
@@ -71,7 +71,7 @@
                     <el-input
                         class="w-[200px]"
                         type="number"
-                        v-model="item.value"
+                        v-model="form.items[index].value"
                         placeholder="请填写"
                     ></el-input>
                 </el-form-item>
@@ -145,15 +145,19 @@ export default {
             form: {
                 standardItems: [
                     {
-                        name: '房屋面积',
+                        name: '房屋面积（平方米）',
                         value: null,
                     },
                     {
-                        name: '设备数量',
+                        name: '设备数量（台）',
                         value: null,
                     },
                     {
-                        name: '人数',
+                        name: '水电用量（平方米）',
+                        value: null,
+                    },
+                    {
+                        name: '人数（人）',
                         value: null,
                     },
                 ],
@@ -253,7 +257,7 @@ export default {
                     this.$route.path === '/assets/office' &&
                     this.$store.getters.getRole === 'studyDirector'
                 ) {
-                    parseAssets(workbook['教科办资源表'])
+                    parseAssets(workbook['教科办资源'])
                 }
 
                 this.$message.success('导入资源成功！')
@@ -321,6 +325,10 @@ export default {
     watch: {
         '$route.path'(to, from) {
             try {
+                localStorage.setItem(
+                    `abc/temp${from}`,
+                    JSON.stringify(this.form.items)
+                )
                 if (to === '/assets/standard') {
                     // this.form.standardItems = tmp
                     // localStorage.setItem(
@@ -328,10 +336,6 @@ export default {
                     //     JSON.stringify(this.form.standardItems)
                     // )
                 } else {
-                    localStorage.setItem(
-                        `abc/temp${from}`,
-                        JSON.stringify(this.form.items)
-                    )
                     const tmp = JSON.parse(
                         localStorage.getItem(`abc/temp${to}`)
                     )

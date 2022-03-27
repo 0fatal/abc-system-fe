@@ -1,8 +1,4 @@
 export const roleMap = {
-    teacher: {
-        routes: ['assets/office', 'assets/standard', 'assets/college'],
-    },
-
     president: {
         routes: [
             '/assets/college',
@@ -11,17 +7,17 @@ export const roleMap = {
             '/assets/export',
         ],
     },
-    // 教科版主任
+    // 教科办主任
     studyDirector: {
-        routes: ['assets/office', 'assets/standard'],
+        routes: ['/assets/office', '/assets/standard'],
     },
     // 学院办主任
     collegeDirector: {
-        routes: ['assets/office', 'assets/standard'],
+        routes: ['/assets/office', '/assets/standard'],
     },
     // 学工办主任
     staffDirector: {
-        routes: ['assets/office', 'assets/standard'],
+        routes: ['/assets/office', '/assets/standard'],
     },
 }
 
