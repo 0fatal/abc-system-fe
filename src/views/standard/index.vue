@@ -6,7 +6,13 @@
                 type="warning"
                 size="mini"
                 @click="handleImport"
-                v-if="$route.path !== '/assets/standard'"
+                v-if="
+                    $route.path !== '/assets/standard' &&
+                    !(
+                        $route.path == '/assets/office' &&
+                        $store.getters.getRole === 'president'
+                    )
+                "
                 >一键导入</el-button
             >
             <input
@@ -78,7 +84,7 @@
             </template>
             <template v-else>
                 <el-form-item
-                    v-for="item in form.standardItems"
+                    v-for="(item, index) in form.standardItems"
                     :key="item.name"
                     size="mini"
                 >
@@ -93,7 +99,7 @@
                     <el-input
                         type="number"
                         class="w-[200px]"
-                        v-model="item.value"
+                        v-model="form.standardItems[index].value"
                         placeholder="请填写"
                     ></el-input>
                 </el-form-item>
@@ -137,64 +143,14 @@ export default {
                 '设备折旧',
                 '小电费',
                 '办公费用',
-                '教职工薪酬',
+                '教职工工资',
                 '实验耗材',
                 '活动经费',
                 '共同体系统',
             ],
             form: {
-                standardItems: [
-                    {
-                        name: '房屋面积（平方米）',
-                        value: null,
-                    },
-                    {
-                        name: '设备数量（台）',
-                        value: null,
-                    },
-                    {
-                        name: '水电用量（平方米）',
-                        value: null,
-                    },
-                    {
-                        name: '人数（人）',
-                        value: null,
-                    },
-                ],
-                items: [
-                    {
-                        name: '房屋折旧',
-                        value: null,
-                    },
-                    {
-                        name: '设备折旧',
-                        value: null,
-                    },
-                    {
-                        name: '小电费',
-                        value: null,
-                    },
-                    {
-                        name: '办公费用',
-                        value: null,
-                    },
-                    {
-                        name: '教职工薪酬',
-                        value: null,
-                    },
-                    {
-                        name: '实验耗材',
-                        value: null,
-                    },
-                    {
-                        name: '活动经费',
-                        value: null,
-                    },
-                    {
-                        name: '共同体系统',
-                        value: null,
-                    },
-                ],
+                standardItems: [],
+                items: [],
             },
         }
     },
@@ -262,7 +218,6 @@ export default {
 
                 this.$message.success('导入资源成功！')
             } catch (e) {
-                throw e
                 this.$message.error(`导入资源失败:：${e.message}`)
             }
         },
@@ -321,51 +276,12 @@ export default {
         },
     },
 
-    created() {},
-    watch: {
-        '$route.path'(to, from) {
-            try {
-                localStorage.setItem(
-                    `abc/temp${from}`,
-                    JSON.stringify(this.form.items)
-                )
-                if (to === '/assets/standard') {
-                    // this.form.standardItems = tmp
-                    // localStorage.setItem(
-                    //     `abc/temp${from}`,
-                    //     JSON.stringify(this.form.standardItems)
-                    // )
-                } else {
-                    const tmp = JSON.parse(
-                        localStorage.getItem(`abc/temp${to}`)
-                    )
-                    if (!tmp) throw ''
+    created() {
+        this.form.standardItems = this.$store.getters.getStandardItems
+    },
 
-                    console.log('tmp', tmp)
-
-                    this.form.items = tmp
-                }
-            } catch (e) {
-                this.form.items = [
-                    {
-                        name: '',
-                        value: null,
-                    },
-                ]
-                // this.form.standardItems = []
-                if (
-                    to === '/assets/office' &&
-                    this.$store.getters.getRole === 'president'
-                ) {
-                    this.form.items = [
-                        {
-                            name: '院长工资',
-                            value: null,
-                        },
-                    ]
-                }
-            }
-        },
+    beforeDestroy() {
+        this.$store.commit('setStandardItems', this.form.standardItems)
     },
 }
 </script>

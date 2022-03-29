@@ -16,15 +16,15 @@ const routes = [
             },
             {
                 path: '/assets/office',
-                component: () => import('@/views/common/index.vue'),
+                component: () => import('@/views/office/index.vue'),
             },
             {
                 path: '/assets/college',
-                component: () => import('@/views/common/index.vue'),
+                component: () => import('@/views/college/index.vue'),
             },
             {
                 path: '/assets/standard',
-                component: () => import('@/views/common/index.vue'),
+                component: () => import('@/views/standard/index.vue'),
             },
             {
                 path: '/assets/export',

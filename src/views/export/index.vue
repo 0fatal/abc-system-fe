@@ -24,12 +24,13 @@
         </p>
 
         <div class="flex justify-end mt-[30px] pr-[50px]">
-            <el-button type="primary">导出</el-button>
+            <el-button type="primary" @click="handleExport">导出</el-button>
         </div>
     </el-card>
 </template>
 
 <script>
+import { exportData } from '@/utils/compute'
 import { clearInput, getIsInput } from '@/utils/storage'
 import { VueOkrTree } from 'vue-okr-tree'
 import 'vue-okr-tree/dist/vue-okr-tree.css'
@@ -83,6 +84,11 @@ export default {
             clearInput(data.id)
             this.$message.success(`[${data.label}]的提交已经撤销成功!`)
             this.$forceUpdate()
+        },
+
+        handleExport() {
+            exportData()
+            this.$message.success('导出成功')
         },
 
         renderContent(h, node) {
