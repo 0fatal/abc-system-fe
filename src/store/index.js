@@ -121,13 +121,13 @@ const store = new Vuex.Store({
         },
     },
     actions: {
-        login({ commit }, { username, password }) {
+        login({ commit, getters }, { username, password }) {
             console.log(username, password)
             const user = doLogin(username, password)
             if (!user) return false
             commit('setRole', user.role)
             commit('setNickname', user.nickname)
-            return true
+            return getters.isLogin
         },
     },
 })
