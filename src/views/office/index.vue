@@ -150,15 +150,18 @@ export default {
     data() {
         return {
             routeMap: Route2MenuItemNameMap,
-            options: [],
+            options: [], // 下拉框选项
             form: {
-                standardItems: [],
+                // 保存下拉框选项的值
                 items: [],
             },
         }
     },
     methods: {
+        // 函数：是否已经导入成员名单
         hasImportMembers: hasImportMembers,
+
+        // 函数：添加资源
         handlePlus() {
             try {
                 this.form.items.push({
@@ -169,17 +172,24 @@ export default {
                 this.$message.error('请先完成上一个资源项的填写')
             }
         },
+
+        // 函数：删除某条资源
         handleDelete(index) {
             this.form.items.splice(index, 1)
         },
+
+        // 函数：导入成员名单
         handleImportMember() {
             // console.log(1111)
             this.$refs['fileMember'].click()
         },
+
+        // 函数：导入资源表格
         handleImport() {
             this.$refs['fileInput'].click()
         },
 
+        // 函数：handleImport调用后自动触发，解析并导入表格
         async handleFile() {
             try {
                 const file = this.$refs.fileInput.files[0]
@@ -230,6 +240,7 @@ export default {
             }
         },
 
+        // 函数：handleImportMember调用后自动触发，解析并导入表格
         async handleImportMemberFile() {
             try {
                 const file = this.$refs.fileMember.files[0]
@@ -265,6 +276,8 @@ export default {
                 this.$message.error(`导入名单失败:：${e.message}`)
             }
         },
+
+        // 确认并保存填写
         handleConfirm() {
             confirmInput(
                 this.$store.getters.getRole,
@@ -276,6 +289,8 @@ export default {
             this.$message.success('保存成功！')
         },
     },
+
+    // 页面创建时初始化上次填写的数据
     created() {
         if (
             this.$store.getters.getOfficeItems[0].name === '' &&
@@ -293,6 +308,7 @@ export default {
         this.options = this.$store.getters.getOfficeOptions
     },
 
+    // 页面关闭前保存填写到缓存，但不保存到本地
     beforeDestroy() {
         this.$store.commit('setOfficeOptions', this.options)
         this.$store.commit('setOfficeItems', this.form.items)

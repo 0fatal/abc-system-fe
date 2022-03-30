@@ -78,6 +78,7 @@ export default {
         return {
             routeMap: Route2MenuItemNameMap,
             options: [
+                // 下拉框选项
                 '房屋折旧',
                 '设备折旧',
                 '水电费',
@@ -87,11 +88,13 @@ export default {
                 '共同体系统',
             ],
             form: {
+                // 保存下拉框选项的值
                 items: [],
             },
         }
     },
     methods: {
+        // 添加一个资源填写
         handlePlus() {
             try {
                 this.form.items.push({
@@ -103,10 +106,12 @@ export default {
             }
         },
 
+        // 导入资源
         handleImport() {
             this.$refs['fileInput'].click()
         },
 
+        // 一旦调用handleImport，自动调用此方法导入并解析excel文件
         async handleFile() {
             try {
                 const file = this.$refs.fileInput.files[0]
@@ -138,6 +143,7 @@ export default {
             }
         },
 
+        // 确认保存填写
         handleConfirm() {
             confirmInput(
                 this.$store.getters.getRole,
@@ -148,10 +154,12 @@ export default {
         },
     },
 
+    // 页面加载时，获取资源填写
     created() {
         this.form.items = this.$store.getters.getCollegeItems
     },
 
+    // 页面关闭前，保存资源填写
     beforeDestroy() {
         this.$store.commit('setCollegeItems', this.form.items)
     },

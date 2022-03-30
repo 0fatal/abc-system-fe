@@ -42,6 +42,7 @@ export default {
     data() {
         return {
             form: {
+                // 默认填在页面上的账号密码，可以改
                 username: 'p001',
                 password: '123456',
             },
@@ -62,8 +63,10 @@ export default {
 
     methods: {
         handleLogin() {
+            // 表单验证，就是账号密码非空啊这些
             this.$refs.form.validate(async (valid) => {
                 if (valid) {
+                    // 如果验证有效
                     const res = await this.$store.dispatch('login', {
                         username: this.form.username,
                         password: this.form.password,

@@ -1,3 +1,4 @@
+// 四舍五入保留两位小数
 export function keepTwoDecimal(num) {
     let result = parseFloat(num)
     if (isNaN(result)) {

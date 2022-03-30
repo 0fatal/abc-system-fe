@@ -1,26 +1,16 @@
 import { roleMap } from '@/role/role'
 import * as xlsx from 'xlsx'
+import { workbook2blob } from './myxlsx'
 import { keepTwoDecimal } from './num'
-
+import { fetchStore } from './storage'
 const fileDownload = require('js-file-download')
 
-export const fetchStore = (key) => {
-    return JSON.parse(localStorage.getItem(key))
-}
-
-const fetchAssetsByRole = (role) => {
-    return {
-        [role]: {
-            office: fetchStore(`abc/${role}/assets/office`),
-            standard: fetchStore(`abc/${role}/assets/standard`),
-        },
-    }
-}
-
+// 取出成员名单
 const fetchMember = () => {
     return fetchStore('abc/member')
 }
 
+// 取出学院资源
 const fetchCollegeAssets = (asset) => {
     if (asset === '院长岗位工资') {
         console.log('院长岗位工资', fetchSalary()['president'].gangwei.total)
@@ -33,6 +23,7 @@ const fetchCollegeAssets = (asset) => {
     )
 }
 
+// 通过资源名字取出每个角色的资源
 const fetchAssetsByAsset = (asset) => {
     const data = {}
     for (const role in roleMap) {
@@ -41,16 +32,21 @@ const fetchAssetsByAsset = (asset) => {
     return data
 }
 
+// 通过分配标准名字取出分配标准，totalFee是总费用，比如房屋折旧总费用，然后此函数能够自动计算在某方面的权重和费用，以及平均值
 const fetchStandardByKey = (key, totalFee) => {
     const data = fetchAssetsByAsset('standard')
     const res = { data: {}, total: 0 }
+
+    // 每个角色的分配标准
     for (const role in data) {
         res.data[role] = {}
         const item = data[role]
         res.data[role].v = Number(item.find((v) => v.name === key).value || 0)
-        res.total += res.data[role].v
+        res.total += res.data[role].v // 总数量
     }
-    res['avg'] = keepTwoDecimal(res.total / Object.keys(data).length)
+    res['avg'] = keepTwoDecimal(res.total / Object.keys(data).length) // 平均值
+
+    // 计算每块的权重和费用
     for (const role in data) {
         res.data[role].w = res.data[role].v / res.total
         if (totalFee) {
@@ -60,7 +56,7 @@ const fetchStandardByKey = (key, totalFee) => {
     return res
 }
 
-//   获取工资
+//  获取工资，分为岗位工资和授课工资
 const fetchSalary = () => {
     const data = fetchAssetsByAsset('office')
     const res = {}
@@ -72,9 +68,11 @@ const fetchSalary = () => {
         }
         data[k].forEach((v) => {
             if (v.name.match(/岗位/)) {
+                // 注意，“岗位”是用来哪个工资的
                 res[k].gangwei.data[v.name] = Number(v.value)
                 res[k].gangwei.total += Number(v.value)
             } else {
+                // 每个角色的总授课工资
                 res[k].shouke.data[v.name] = v.value
                 res[k].shouke.total += v.value
             }
@@ -83,10 +81,10 @@ const fetchSalary = () => {
     })
     return res
 }
-// 学生管理 党团建设 社团管理 科研竞赛 思政课程教学
 
+// 数据处理核心过程1
 const processData = () => {
-    // 总资源，fetchCollegeAssets 房屋折旧 设备折旧 水电费 办公费用 实验耗材 活动经费 共同体系统 院长岗位工资
+    // 学院资源
     const fangwu = fetchCollegeAssets('房屋折旧')
     const shebei = fetchCollegeAssets('设备折旧')
     const shui = fetchCollegeAssets('水电费')
@@ -114,6 +112,7 @@ const processData = () => {
         yuangong
     )
 
+    // 设备资源
     let deviceCount = fetchStandardByKey('设备数量（台）', shebei)
     let peopleCount = fetchStandardByKey('人数（人）', bangong) // 人数
     // let waterCount = fetchStandardByKey('水电用量（平方米', shui) // 水电费
@@ -123,6 +122,7 @@ const processData = () => {
     console.log('peopleCount', peopleCount)
     console.log('squareCount', squareCount)
 
+    // 薪水
     const salary = fetchSalary()
 
     console.log('salary', salary)
@@ -131,6 +131,7 @@ const processData = () => {
         peopleCount.data['collegeDirector']
     )
 
+    // 计算每块分类的费用
     const computeFeeClassify = () => {
         const res = {}
         // 学院管理
@@ -419,27 +420,11 @@ const processData = () => {
     return data
 }
 
-const computeData = () => {
-    const data = processData()
-    // 1. 所有资源加起来
-    // 2. 总费用 院长填
-    // 3. 分配数量是分配标准
-    // 4. 费用 是 总费用/分配总数 * 分配标准树数目
-    // 5. 再用公式计算出四块的大小
-
-    // 除以总人数
-    return data
-}
-
-const downloadFile = () => {
-    fileDownload(data, 'export.xlsx')
-}
-
+// 数据处理核心过程2，导出数据
 export const exportData = () => {
-    const data = computeData()
+    const data = processData()
 
-    // const sheet = xlsx.utils.json_to_sheet(data)
-
+    // 展示的表头，右边才是实际显示的
     const headerDisplay = {
         资源: '',
         工资: '',
@@ -463,6 +448,7 @@ export const exportData = () => {
 
     const header = Object.keys(headerDisplay)
 
+    // 学院资源
     const fangwu = fetchCollegeAssets('房屋折旧')
     const shebei = fetchCollegeAssets('设备折旧')
     const shui = fetchCollegeAssets('水电费')
@@ -471,16 +457,19 @@ export const exportData = () => {
     const huodong = fetchCollegeAssets('活动经费')
     const gongtong = fetchCollegeAssets('共同体系统')
 
+    // 设备资源
     let deviceCount = fetchStandardByKey('设备数量（台）', shebei)
     let peopleCount = fetchStandardByKey('人数（人）', bangong) // 人数
     let waterCount = fetchStandardByKey('房屋面积（平方米）', shui) // 水电费
     let squareCount = fetchStandardByKey('房屋面积（平方米）', fangwu) // 房屋面积
 
+    // 薪水
     const salary = fetchSalary()
+    // 成员名单
     const members = fetchMember()
     console.log(members)
 
-    console.log(data)
+    // 学生管理总计
     const studentM =
         data['学生管理']['活动经费'] +
         data['学生管理']['房屋折旧'] +
@@ -491,6 +480,7 @@ export const exportData = () => {
         data['学生管理']['办公费用'] +
         data['学生管理']['水电费']
 
+    // 党团建设总计
     const dangtuanM =
         data['党团建设']['活动经费'] +
         data['党团建设']['房屋折旧'] +
@@ -500,6 +490,7 @@ export const exportData = () => {
         data['党团建设']['办公费用'] +
         data['党团建设']['水电费']
 
+    // 社团管理总计
     const shetuanM =
         data['社团管理']['活动经费'] +
         data['社团管理']['房屋折旧'] +
@@ -508,6 +499,8 @@ export const exportData = () => {
         data['社团管理']['学院管理'] +
         data['社团管理']['办公费用'] +
         data['社团管理']['水电费']
+
+    // 科研竞赛总计
     const keyanM =
         data['科研竞赛']['房屋折旧'] +
         data['科研竞赛']['设备折旧'] +
@@ -516,6 +509,8 @@ export const exportData = () => {
         data['科研竞赛']['学院管理'] +
         data['科研竞赛']['办公费用'] +
         data['科研竞赛']['实验耗材']
+
+    // 思政课程教学总计
     const sizhengM =
         data['思政课程教学']['房屋折旧'] +
         data['思政课程教学']['设备折旧'] +
@@ -524,6 +519,7 @@ export const exportData = () => {
         data['思政课程教学']['办公费用'] +
         data['思政课程教学']['水电费']
 
+    // 教科办总计
     const jiaokeTotal =
         squareCount.data['studyDirector'].fee +
         deviceCount.data['studyDirector'].fee +
@@ -537,6 +533,7 @@ export const exportData = () => {
         ) +
         salary['studyDirector'].total
 
+    // 下面是平均值，除以服务人数的，也就是参与党团建设、科研竞赛的的人次
     const dangtuanAvg = keepTwoDecimal(
         dangtuanM /
             Object.values(members).reduce(
@@ -562,7 +559,6 @@ export const exportData = () => {
     )
 
     const studentAvg = keepTwoDecimal(studentM / Object.keys(members).length)
-
     const sizhengAvg = keepTwoDecimal(sizhengM / Object.keys(members).length)
     const jiaokeAvg = keepTwoDecimal(jiaokeTotal / Object.keys(members).length)
 
@@ -570,6 +566,7 @@ export const exportData = () => {
     console.log('sizhengAvg', dangtuanAvg)
     console.log('jiaokeAvg', shetuanAvg)
 
+    // ========= 导出的sheet =========
     let sheet = [
         {
             资源: '房屋折旧',
@@ -689,10 +686,13 @@ export const exportData = () => {
                 data['思政课程教学']['学院管理'],
         },
 
+        // 这是遍历岗位工资
         ...Object.values(salary).flatMap((v) => {
             return Object.entries(v.gangwei.data).map(([k, v1]) => {
                 console.log('kv', k, v1)
+                // k是老师名字，v1是岗位工资，其他是分配情况
                 if (k.match(/赵/)) {
+                    // 如果是赵老师
                     return {
                         工资: k,
                         总费用: v1,
@@ -722,6 +722,8 @@ export const exportData = () => {
                 }
             })
         }),
+
+        // 这是遍历授课工资
         ...Object.values(salary).flatMap((v) => {
             return Object.entries(v.shouke.data).map(([k, v]) => {
                 return {
@@ -791,6 +793,7 @@ export const exportData = () => {
         }),
     ]
 
+    // ======
     sheet = [headerDisplay, ...sheet]
 
     const worksheet = xlsx.utils.json_to_sheet(sheet, {
@@ -798,6 +801,7 @@ export const exportData = () => {
         skipHeader: true,
     })
 
+    // ==== 一些表格格式配置，如每格宽度
     const colsconfig = []
     Object.keys(header).forEach((key) => {
         colsconfig.push({
@@ -807,9 +811,10 @@ export const exportData = () => {
 
     worksheet['!cols'] = colsconfig //设置列属性
 
-    console.log(worksheet)
+    // ====
+
     Object.keys(worksheet).forEach((key) => {
-        //设置单元格属性
+        //设置单元格属性，但好像不起作用
         if (key.indexOf('!') < 0) {
             worksheet[key].s = {
                 alignment: {
@@ -824,37 +829,13 @@ export const exportData = () => {
                     bottom: { style: 'thin' },
                 },
             }
-            console.log(worksheet[key])
         }
     })
 
     const wb = xlsx.utils.book_new()
-    xlsx.utils.book_append_sheet(wb, worksheet, 'Sheet1')
+    xlsx.utils.book_append_sheet(wb, worksheet, 'Sheet1') // 加入sheet
     const exportData = workbook2blob(wb, header)
-    // 将data 映射为 xlsx文件
-    fileDownload(exportData, 'export.xlsx')
-}
 
-function workbook2blob(workbook) {
-    // 生成excel的配置项
-    const wopts = {
-        // 要生成的文件类型
-        bookType: 'xlsx',
-        // // 是否生成Shared String Table，官方解释是，如果开启生成速度会下降，但在低版本IOS设备上有更好的兼容性
-        bookSST: false,
-        type: 'binary',
-    }
-
-    const wbout = xlsx.write(workbook, wopts)
-    // 将字符串转ArrayBuffer
-    function s2ab(s) {
-        const buf = new ArrayBuffer(s.length)
-        const view = new Uint8Array(buf)
-        for (let i = 0; i != s.length; ++i) view[i] = s.charCodeAt(i) & 0xff
-        return buf
-    }
-    const blob = new Blob([s2ab(wbout)], {
-        type: 'application/octet-stream',
-    })
-    return blob
+    // ！！！！！！！！下载文件
+    fileDownload(exportData, 'export.xlsx') // 这里可以改导出文件名
 }

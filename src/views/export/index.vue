@@ -45,6 +45,7 @@ export default {
         VueOkrTree,
     },
     data() {
+        // 这个是 组织 树，就是树形图对应的每个节点
         return {
             testData: [
                 {
@@ -71,6 +72,7 @@ export default {
         }
     },
     computed: {
+        // 这个用来渲染树形图节点的样式
         renderLabelClass() {
             return (node) => {
                 return getIsInput(node.data.id) === true
@@ -81,7 +83,10 @@ export default {
     },
 
     methods: {
+        // 函数：确认所有角色是否都完成填写
         getAllIsInput: getAllIsInput,
+
+        // 函数：撤销填写
         async handleNodeClick(data) {
             await this.$confirm(`是否要撤销[${data.label}]的提交？`, '提示', {
                 confirmButtonText: '确定',
@@ -92,6 +97,7 @@ export default {
             this.$forceUpdate()
         },
 
+        // 函数：导出
         handleExport() {
             if (!getAllIsInput()) {
                 this.$message.error('导出失败，不是所有角色都已确认填报')
@@ -99,10 +105,6 @@ export default {
             }
             exportData()
             this.$message.success('导出成功')
-        },
-
-        renderContent(h, node) {
-            return h()
         },
     },
 }

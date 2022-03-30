@@ -1,3 +1,4 @@
+// 角色对应的可以显示的页面地址
 export const roleMap = {
     president: {
         routes: [
@@ -21,6 +22,7 @@ export const roleMap = {
     },
 }
 
+// 每个页面对应的标题
 export const Route2MenuItemNameMap = {
     '/assets/office': '分办公室资源',
     '/assets/standard': '分配标准',

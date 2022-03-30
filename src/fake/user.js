@@ -1,3 +1,4 @@
+// 账号表，其中role只能是以下四种，其他随意更改
 export const userList = [
     {
         username: 'p001',
@@ -25,6 +26,7 @@ export const userList = [
     },
 ]
 
+// 登录，查找是否在账户表内
 export const doLogin = (username, password) => {
     const user = userList.find(
         (item) => item.username === username && item.password === password

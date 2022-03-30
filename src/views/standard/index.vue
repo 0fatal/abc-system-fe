@@ -47,29 +47,31 @@ export default {
     data() {
         return {
             routeMap: Route2MenuItemNameMap,
-            options: [],
+            options: [], // 下拉框的选项
             form: {
+                // 保存每个下拉框值的变量
                 standardItems: [],
             },
         }
     },
     methods: {
+        // 确认并保存填写
         handleConfirm() {
             confirmInput(
                 this.$store.getters.getRole,
                 this.$route.path,
-                this.$route.path === '/assets/standard'
-                    ? this.form.standardItems
-                    : this.form.items
+                this.form.standardItems
             )
             this.$message.success('保存成功！')
         },
     },
 
+    // 页面创建时载入上次填写的
     created() {
         this.form.standardItems = this.$store.getters.getStandardItems
     },
 
+    // 页面关闭前保存填写到缓存，但不保存到本地
     beforeDestroy() {
         this.$store.commit('setStandardItems', this.form.standardItems)
     },

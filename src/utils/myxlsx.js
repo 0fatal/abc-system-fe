@@ -1,6 +1,6 @@
 import * as xlsx from 'xlsx'
-import { read } from 'xlsx'
 
+// 解析excel文件
 export const parseXLSXFile = (path) => {
     console.log(path)
     return new Promise((resolve, reject) => {
@@ -17,51 +17,26 @@ export const parseXLSXFile = (path) => {
     })
 }
 
-export const exportXLSXFile = (data) => {
-    const workBook = {
-        SheetNames: ['Sheet1'],
-        Sheets: {},
-        Props: {},
+export function workbook2blob(workbook) {
+    // 生成excel的配置项
+    const wopts = {
+        // 要生成的文件类型
+        bookType: 'xlsx',
+        // // 是否生成Shared String Table，官方解释是，如果开启生成速度会下降，但在低版本IOS设备上有更好的兼容性
+        bookSST: false,
+        type: 'binary',
     }
 
-    workBook.Sheets['Sheet1'] = xlsx.utils.json_to_sheet(data)
-    saveAs(
-        new Blob([changeData(XLSX.write(workBook, wopts))], {
-            type: 'application/octet-stream',
-        })
-    )
-}
-
-function changeData(s) {
-    //如果存在ArrayBuffer对象(es6) 最好采用该对象
-    if (typeof ArrayBuffer !== 'undefined') {
-        //1、创建一个字节长度为s.length的内存区域
+    const wbout = xlsx.write(workbook, wopts)
+    // 将字符串转ArrayBuffer
+    function s2ab(s) {
         const buf = new ArrayBuffer(s.length)
-
-        //2、创建一个指向buf的Unit8视图，开始于字节0，直到缓冲区的末尾
         const view = new Uint8Array(buf)
-
-        //3、返回指定位置的字符的Unicode编码
-        for (const i = 0; i != s.length; ++i) view[i] = s.charCodeAt(i) & 0xff
-        return buf
-    } else {
-        const buf = new Array(s.length)
-        for (const i = 0; i != s.length; ++i) buf[i] = s.charCodeAt(i) & 0xff
+        for (let i = 0; i != s.length; ++i) view[i] = s.charCodeAt(i) & 0xff
         return buf
     }
-}
-
-function saveAs(obj, fileName) {
-    //当然可以自定义简单的下载文件实现方式
-
-    const tmpa = document.createElement('a')
-
-    tmpa.download = fileName || '下载'
-    tmpa.href = URL.createObjectURL(obj) //绑定a标签
-    tmpa.click() //模拟点击实现下载
-
-    setTimeout(function () {
-        //延时释放
-        URL.revokeObjectURL(obj) //用URL.revokeObjectURL()来释放这个object URL
-    }, 100)
+    const blob = new Blob([s2ab(wbout)], {
+        type: 'application/octet-stream',
+    })
+    return blob
 }

@@ -2,18 +2,20 @@ import { doLogin } from '@/fake/user'
 import Vue from 'vue'
 import Vuex from 'vuex'
 import { roleMap } from '@/role/role'
-import { fetchStore } from '@/utils/compute'
+import { fetchStore } from '@/utils/storage'
 
 Vue.use(Vuex)
 
+// 临时的全局状态管理
 const store = new Vuex.Store({
     state: {
-        role: null,
+        role: null, // 用户角色
         nickname: '',
         items: {
+            // 保存的资源条目
             office: [{ name: '', value: null }],
             college: [{ name: '', value: null }],
-        },
+        }, // 保存的分配标准条目
         standardItems: [
             {
                 name: '房屋面积（平方米）',
@@ -33,11 +35,14 @@ const store = new Vuex.Store({
             },
         ],
         options: {
+            // 保存的下拉框选项
             office: [],
         },
     },
     getters: {
+        // 取当前登录用户的角色类型
         getRole: (state) => state.role,
+        // 取是否登录
         isLogin: (state) => {
             if (!state.role) {
                 state.role = localStorage.getItem('abc/role')
@@ -61,13 +66,19 @@ const store = new Vuex.Store({
 
             return !!state.role
         },
+        // 取当前登录用户的昵称
         nickname: (state) => state.nickname,
+        // 取当前登录用户的可以打开的页面地址，并显示在侧边栏
         getRoutes: (state) => {
             return roleMap[state.role].routes
         },
+        // 取保存的办公室资源
         getOfficeItems: (state) => state.items.office,
+        // 取保存的学院资源
         getCollegeItems: (state) => state.items.college,
+        // 取保存的分配标准
         getStandardItems: (state) => state.standardItems,
+        // 取保存的下拉框选项
         getOfficeOptions: (state) => state.options.office,
     },
     mutations: {

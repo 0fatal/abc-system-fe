@@ -5,6 +5,7 @@ import store from '@/store'
 
 Vue.use(VueRouter)
 
+// 映射页面地址到对应的页面文件
 const routes = [
     {
         path: '/',
@@ -44,6 +45,7 @@ const router = new VueRouter({
     routes,
 })
 
+// 登录拦截，登录了才能继续操作
 router.beforeEach((to, from, next) => {
     if (!store.getters.isLogin && to.path !== '/login') {
         next('/login')
