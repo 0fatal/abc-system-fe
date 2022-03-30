@@ -32,6 +32,9 @@ const store = new Vuex.Store({
                 value: null,
             },
         ],
+        options: {
+            office: [],
+        },
     },
     getters: {
         getRole: (state) => state.role,
@@ -39,6 +42,21 @@ const store = new Vuex.Store({
             if (!state.role) {
                 state.role = localStorage.getItem('abc/role')
                 state.nickname = localStorage.getItem('abc/nickname')
+
+                state.standardItems =
+                    fetchStore(`abc/${state.role}/assets/standard`) ||
+                    state.standardItems
+                state.items.office =
+                    fetchStore(`abc/${state.role}/assets/office`) ||
+                    state.items.office
+                state.items.college =
+                    fetchStore(`abc/president/assets/college`) ||
+                    state.items.college
+                state.options.office =
+                    fetchStore(`abc/${state.role}/options/office`) ||
+                    state.role === 'president'
+                        ? ['院长岗位工资']
+                        : []
             }
 
             return !!state.role
@@ -50,6 +68,7 @@ const store = new Vuex.Store({
         getOfficeItems: (state) => state.items.office,
         getCollegeItems: (state) => state.items.college,
         getStandardItems: (state) => state.standardItems,
+        getOfficeOptions: (state) => state.options.office,
     },
     mutations: {
         setRole(state, role) {
@@ -79,6 +98,15 @@ const store = new Vuex.Store({
             state.items.college =
                 fetchStore(`abc/president/assets/college`) ||
                 state.items.college
+            state.options.office =
+                fetchStore(`abc/${state.role}/options/office`) || []
+        },
+        setOfficeOptions(state, options) {
+            state.options.office = options
+            localStorage.setItem(
+                `abc/${state.role}/options/office`,
+                JSON.stringify(options)
+            )
         },
     },
     actions: {

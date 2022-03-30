@@ -23,32 +23,66 @@
                 @change="handleFile"
             />
         </div>
-        <div class="flex justify-between operation">
-            <div>
-                <!-- //TODO加一个已导入绿色的，localStorage -->
-                <el-button
-                    size="mini"
-                    @click="handleImportMember"
-                    v-if="
-                        $route.path === '/assets/office' &&
-                        $store.getters.getRole === 'staffDirector'
-                    "
-                    >导入人员名单</el-button
-                >
-                <input
-                    type="file"
-                    v-show="false"
-                    accept=".xlsx"
-                    ref="fileMember"
-                    @change="handleImportMemberFile"
-                />
-                <!-- <el-button size="mini">导入竞赛人员名单</el-button>
+        <div>
+            <div class="flex justify-between operation">
+                <div>
+                    <!-- //TODO加一个已导入绿色的，localStorage -->
+                    <el-button
+                        size="mini"
+                        @click="handleImportMember"
+                        v-if="
+                            $route.path === '/assets/office' &&
+                            $store.getters.getRole === 'staffDirector'
+                        "
+                        :type="`${hasImportMembers() ? 'primary' : 'success'}`"
+                        >{{
+                            hasImportMembers() ? '重新' : ''
+                        }}导入人员名单</el-button
+                    >
+                    <input
+                        type="file"
+                        v-show="false"
+                        accept=".xlsx"
+                        ref="fileMember"
+                        @change="handleImportMemberFile"
+                    />
+                    <!-- <el-button size="mini">导入竞赛人员名单</el-button>
                 <el-button size="mini">导入党团人员名单</el-button>
                 <el-button size="mini">导入社团人员名单</el-button> -->
+                </div>
+                <el-button type="primary" size="mini" @click="handleConfirm"
+                    >确认并保存填写</el-button
+                >
             </div>
-            <el-button type="primary" size="mini" @click="handleConfirm"
-                >确认并保存填写</el-button
-            >
+            <div>
+                <el-select
+                    v-model="options"
+                    multiple
+                    filterable
+                    allow-create
+                    default-first-option
+                    class="w-[400px]"
+                    placeholder="请选择办公室资源"
+                    @remove-tag="
+                        (tag) => {
+                            handleDelete(
+                                form.items.findIndex(
+                                    (item) => item.name === tag
+                                )
+                            )
+                        }
+                    "
+                >
+                    <el-option
+                        v-for="item in options"
+                        :key="item"
+                        :label="item"
+                        :value="item"
+                    >
+                    </el-option>
+                </el-select>
+            </div>
+            <el-divider></el-divider>
         </div>
         <el-form>
             <el-form-item>
@@ -74,12 +108,20 @@
                             :value="option"
                         ></el-option>
                     </el-select>
-                    <el-input
-                        class="w-[200px]"
-                        type="number"
-                        v-model="form.items[index].value"
-                        placeholder="请填写"
-                    ></el-input>
+                    <div>
+                        <el-input
+                            class="w-[200px]"
+                            type="number"
+                            v-model="form.items[index].value"
+                            placeholder="请填写"
+                        ></el-input>
+                        <el-button
+                            class="ml-10"
+                            type="danger"
+                            @click="handleDelete(index)"
+                            >删除</el-button
+                        >
+                    </div>
                 </el-form-item>
             </template>
             <template v-else>
@@ -128,7 +170,8 @@
 <script>
 import { parseXLSXFile } from '@/utils/myxlsx'
 import { Route2MenuItemNameMap } from '@/role/role'
-import { confirmInput } from '@/utils/storage'
+import { confirmInput, hasImportMembers } from '@/utils/storage'
+import { hasImportMembers } from '@/utils/storage'
 
 // TODO 数据的created读取 getInput
 // TODO 下拉框列表项的手动增加，可能需要localStorage存到本地？
@@ -138,16 +181,7 @@ export default {
     data() {
         return {
             routeMap: Route2MenuItemNameMap,
-            options: [
-                '房屋折旧',
-                '设备折旧',
-                '小电费',
-                '办公费用',
-                '教职工工资',
-                '实验耗材',
-                '活动经费',
-                '共同体系统',
-            ],
+            options: [],
             form: {
                 standardItems: [],
                 items: [],
@@ -155,6 +189,7 @@ export default {
         }
     },
     methods: {
+        hasImportMembers: hasImportMembers,
         handlePlus() {
             try {
                 this.form.items.push({
@@ -164,6 +199,9 @@ export default {
             } catch (e) {
                 this.$message.error('请先完成上一个资源项的填写')
             }
+        },
+        handleDelete(index) {
+            this.form.items.splice(index, 1)
         },
         handleImportMember() {
             // console.log(1111)
@@ -215,6 +253,9 @@ export default {
                 ) {
                     parseAssets(workbook['教科办资源'])
                 }
+
+                this.options = this.form.items.map((item) => item.name)
+                this.$forceUpdate()
 
                 this.$message.success('导入资源成功！')
             } catch (e) {
@@ -289,9 +330,11 @@ export default {
             ])
         }
         this.form.items = this.$store.getters.getOfficeItems
+        this.options = this.$store.getters.getOfficeOptions
     },
 
     beforeDestroy() {
+        this.$store.commit('setOfficeOptions', this.options)
         this.$store.commit('setOfficeItems', this.form.items)
     },
 }

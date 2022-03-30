@@ -23,29 +23,7 @@
                 @change="handleFile"
             />
         </div>
-        <div class="flex justify-between operation">
-            <div>
-                <!-- //TODO加一个已导入绿色的，localStorage -->
-                <el-button
-                    size="mini"
-                    @click="handleImportMember"
-                    v-if="
-                        $route.path === '/assets/office' &&
-                        $store.getters.getRole === 'staffDirector'
-                    "
-                    >导入人员名单</el-button
-                >
-                <input
-                    type="file"
-                    v-show="false"
-                    accept=".xlsx"
-                    ref="fileMember"
-                    @change="handleImportMemberFile"
-                />
-                <!-- <el-button size="mini">导入竞赛人员名单</el-button>
-                <el-button size="mini">导入党团人员名单</el-button>
-                <el-button size="mini">导入社团人员名单</el-button> -->
-            </div>
+        <div class="flex justify-end operation">
             <el-button type="primary" size="mini" @click="handleConfirm"
                 >确认并保存填写</el-button
             >
@@ -130,9 +108,6 @@ import { parseXLSXFile } from '@/utils/myxlsx'
 import { Route2MenuItemNameMap } from '@/role/role'
 import { confirmInput } from '@/utils/storage'
 
-// TODO 数据的created读取 getInput
-// TODO 下拉框列表项的手动增加，可能需要localStorage存到本地？
-
 export default {
     data() {
         return {
@@ -140,9 +115,8 @@ export default {
             options: [
                 '房屋折旧',
                 '设备折旧',
-                '小电费',
+                '水电费',
                 '办公费用',
-                '教职工工资',
                 '实验耗材',
                 '活动经费',
                 '共同体系统',

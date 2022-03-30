@@ -30,3 +30,7 @@ export const clearInput = (role) => {
 export const getInput = (role, route) => {
     return JSON.parse(localStorage.getItem(`abc/${role}${route}`))
 }
+
+export const hasImportMembers = () => {
+    return !!localStorage.getItem(`abc/member`)
+}
