@@ -49,15 +49,29 @@ const store = new Vuex.Store({
                 state.nickname = localStorage.getItem('abc/nickname')
 
                 if (state.role) {
-                    state.standardItems =
-                        fetchStore(`abc/${state.role}/assets/standard`) ||
-                        state.standardItems
-                    state.items.office =
-                        fetchStore(`abc/${state.role}/assets/office`) ||
-                        state.items.office
-                    state.items.college =
-                        fetchStore(`abc/president/assets/college`) ||
-                        state.items.college
+                    state.standardItems = fetchStore(
+                        `abc/${state.role}/assets/standard`
+                    ) || [
+                        {
+                            name: '房屋面积（平方米）',
+                            value: null,
+                        },
+                        {
+                            name: '设备数量（台）',
+                            value: null,
+                        },
+                        {
+                            name: '人数（人）',
+                            value: null,
+                        },
+                    ]
+                    state.items.office = fetchStore(
+                        `abc/${state.role}/assets/office`
+                    ) || [{ name: '', value: null }]
+                    state.items.college = fetchStore(
+                        `abc/president/assets/college`
+                    ) || [{ name: '', value: null }]
+
                     state.options.office =
                         fetchStore(`abc/${state.role}/options/office`) ||
                         (state.role === 'president' ? ['院长岗位工资'] : [])
@@ -101,25 +115,35 @@ const store = new Vuex.Store({
         },
         initItems(state) {
             if (!state.role) return
-            state.standardItems =
-                fetchStore(`abc/${state.role}/assets/standard`) ||
-                state.standardItems
-            state.items.office =
-                fetchStore(`abc/${state.role}/assets/office`) ||
-                state.items.office
-            state.items.college =
-                fetchStore(`abc/president/assets/college`) ||
-                state.items.college
+            state.standardItems = fetchStore(
+                `abc/${state.role}/assets/standard`
+            ) || [
+                {
+                    name: '房屋面积（平方米）',
+                    value: null,
+                },
+                {
+                    name: '设备数量（台）',
+                    value: null,
+                },
+                {
+                    name: '人数（人）',
+                    value: null,
+                },
+            ]
+            state.items.office = fetchStore(
+                `abc/${state.role}/assets/office`
+            ) || [{ name: '', value: null }]
+            state.items.college = fetchStore(
+                `abc/president/assets/college`
+            ) || [{ name: '', value: null }]
+
             state.options.office =
                 fetchStore(`abc/${state.role}/options/office`) ||
                 (state.role === 'president' ? ['院长岗位工资'] : [])
         },
         setOfficeOptions(state, options) {
             state.options.office = options
-            localStorage.setItem(
-                `abc/${state.role}/options/office`,
-                JSON.stringify(options)
-            )
         },
     },
     actions: {
@@ -131,6 +155,11 @@ const store = new Vuex.Store({
             commit('setNickname', user.nickname)
             commit('initItems')
             return true
+        },
+
+        logout({ commit }) {
+            commit('setRole', '')
+            commit('setNickname', '')
         },
     },
 })

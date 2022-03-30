@@ -33,7 +33,7 @@
                             $route.path === '/assets/office' &&
                             $store.getters.getRole === 'staffDirector'
                         "
-                        :type="`${hasImportMembers() ? 'primary' : 'success'}`"
+                        :type="`${hasImportMembers() ? 'success' : 'primary'}`"
                         >{{
                             hasImportMembers() ? '重新' : ''
                         }}导入人员名单</el-button
@@ -286,6 +286,10 @@ export default {
                 this.$route.path === '/assets/standard'
                     ? this.form.standardItems
                     : this.form.items
+            )
+            localStorage.setItem(
+                `abc/${this.$store.getters.getRole}/options/office`,
+                JSON.stringify(this.options)
             )
             this.$message.success('保存成功！')
         },
