@@ -60,9 +60,7 @@ const store = new Vuex.Store({
                         state.items.college
                     state.options.office =
                         fetchStore(`abc/${state.role}/options/office`) ||
-                        state.role === 'president'
-                            ? ['院长岗位工资']
-                            : []
+                        (state.role === 'president' ? ['院长岗位工资'] : [])
                 }
             }
 
@@ -114,9 +112,7 @@ const store = new Vuex.Store({
                 state.items.college
             state.options.office =
                 fetchStore(`abc/${state.role}/options/office`) ||
-                state.role === 'president'
-                    ? ['院长岗位工资']
-                    : []
+                (state.role === 'president' ? ['院长岗位工资'] : [])
         },
         setOfficeOptions(state, options) {
             state.options.office = options
