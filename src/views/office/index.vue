@@ -175,6 +175,7 @@ export default {
 
         // 函数：删除某条资源
         handleDelete(index) {
+            if (index < 0) return
             this.form.items.splice(index, 1)
         },
 
