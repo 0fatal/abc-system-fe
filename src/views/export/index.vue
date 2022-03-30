@@ -24,14 +24,19 @@
         </p>
 
         <div class="flex justify-end mt-[30px] pr-[50px]">
-            <el-button type="primary" @click="handleExport">导出</el-button>
+            <el-button
+                type="primary"
+                @click="handleExport"
+                :disabled="!getAllIsInput()"
+                >导出</el-button
+            >
         </div>
     </el-card>
 </template>
 
 <script>
 import { exportData } from '@/utils/compute'
-import { clearInput, getIsInput } from '@/utils/storage'
+import { clearInput, getAllIsInput, getIsInput } from '@/utils/storage'
 import { VueOkrTree } from 'vue-okr-tree'
 import 'vue-okr-tree/dist/vue-okr-tree.css'
 
@@ -76,6 +81,7 @@ export default {
     },
 
     methods: {
+        getAllIsInput: getAllIsInput,
         async handleNodeClick(data) {
             await this.$confirm(`是否要撤销[${data.label}]的提交？`, '提示', {
                 confirmButtonText: '确定',
@@ -87,6 +93,10 @@ export default {
         },
 
         handleExport() {
+            if (!getAllIsInput()) {
+                this.$message.error('导出失败，不是所有角色都已确认填报')
+                return
+            }
             exportData()
             this.$message.success('导出成功')
         },

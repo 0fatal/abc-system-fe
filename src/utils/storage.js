@@ -1,7 +1,6 @@
 import { roleMap } from '@/role/role'
 
 export const getIsInput = (role) => {
-    console.log(role)
     if (role === 'staffDirector') {
         if (!localStorage.getItem(`abc/member`)) {
             return false
@@ -11,6 +10,15 @@ export const getIsInput = (role) => {
         console.log(route)
         if (route === '/assets/export') continue
         if (!localStorage.getItem(`abc/${role}${route}`)) {
+            return false
+        }
+    }
+    return true
+}
+
+export const getAllIsInput = () => {
+    for (const role in roleMap) {
+        if (!getIsInput(role)) {
             return false
         }
     }
