@@ -26,7 +26,6 @@
         <div>
             <div class="flex justify-between operation">
                 <div>
-                    <!-- //TODO加一个已导入绿色的，localStorage -->
                     <el-button
                         size="mini"
                         @click="handleImportMember"
@@ -87,11 +86,7 @@
         <el-form>
             <el-form-item>
                 <strong class="text-[20px]">资源</strong>
-                <strong class="text-[20px]">{{
-                    $route.path === '/assets/standard'
-                        ? '使用面积/数量'
-                        : '费用'
-                }}</strong>
+                <strong class="text-[20px]">费用</strong>
             </el-form-item>
 
             <template v-if="$route.path !== '/assets/standard'">
@@ -124,28 +119,7 @@
                     </div>
                 </el-form-item>
             </template>
-            <template v-else>
-                <el-form-item
-                    v-for="(item, index) in form.standardItems"
-                    :key="item.name"
-                    size="mini"
-                >
-                    <el-select v-model="item.name" disabled>
-                        <el-option
-                            v-for="option in options"
-                            :key="option"
-                            :label="option"
-                            :value="option"
-                        ></el-option>
-                    </el-select>
-                    <el-input
-                        type="number"
-                        class="w-[200px]"
-                        v-model="form.standardItems[index].value"
-                        placeholder="请填写"
-                    ></el-input>
-                </el-form-item>
-            </template>
+
             <el-form-item v-if="$route.path !== '/assets/standard'">
                 <span></span>
                 <span></span>
@@ -171,11 +145,6 @@
 import { parseXLSXFile } from '@/utils/myxlsx'
 import { Route2MenuItemNameMap } from '@/role/role'
 import { confirmInput, hasImportMembers } from '@/utils/storage'
-import { hasImportMembers } from '@/utils/storage'
-
-// TODO 数据的created读取 getInput
-// TODO 下拉框列表项的手动增加，可能需要localStorage存到本地？
-// TODO 杭电背景图
 
 export default {
     data() {
@@ -232,9 +201,7 @@ export default {
                     console.log(form)
                     this.form.items = form
                 }
-                if (this.$route.path === '/assets/college') {
-                    parseAssets(workbook['学院资源表'])
-                }
+
                 if (
                     this.$route.path === '/assets/office' &&
                     this.$store.getters.getRole === 'staffDirector'
@@ -307,13 +274,6 @@ export default {
                     : this.form.items
             )
             this.$message.success('保存成功！')
-        },
-
-        loadForm() {
-            try {
-                const data = getInput()
-                this.form.items = data
-            } catch (e) {}
         },
     },
     created() {
