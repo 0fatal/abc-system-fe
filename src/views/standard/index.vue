@@ -1,7 +1,11 @@
 <template>
     <el-card class="common-card">
         <div slot="header" class="header flex justify-between">
-            <strong>{{ routeMap[$route.path] }}</strong>
+            <strong>{{
+                getRoleName($store.getters.getRole) +
+                ' / ' +
+                routeMap[$route.path]
+            }}</strong>
         </div>
         <div class="flex justify-end operation">
             <el-button type="primary" size="mini" @click="handleConfirm"
@@ -40,7 +44,7 @@
 </template>
 
 <script>
-import { Route2MenuItemNameMap } from '@/role/role'
+import { getRoleName, Route2MenuItemNameMap } from '@/role/role'
 import { confirmInput } from '@/utils/storage'
 
 export default {
@@ -55,6 +59,7 @@ export default {
         }
     },
     methods: {
+        getRoleName: getRoleName,
         // 确认并保存填写
         handleConfirm() {
             confirmInput(
@@ -66,8 +71,11 @@ export default {
         },
     },
 
+    // watch: {},
+
     // 页面创建时载入上次填写的
     created() {
+        this.$store.getters.getRole
         this.form.standardItems = this.$store.getters.getStandardItems
     },
 

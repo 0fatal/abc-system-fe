@@ -3,6 +3,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import { roleMap } from '@/role/role'
 import { fetchStore } from '@/utils/storage'
+import router from '@/router'
 
 Vue.use(Vuex)
 
@@ -41,16 +42,60 @@ const store = new Vuex.Store({
     },
     getters: {
         // 取当前登录用户的角色类型
-        getRole: (state) => state.role,
+        getRole: (state) => {
+            if (state.role !== 'admin') {
+                return state.role
+            }
+            const role = router.currentRoute.query['role']
+            // let lastRole = localStorage.getItem('abc/lastRole')
+            // console.log(lastRole, role)
+            // if (lastRole !== role) {
+            console.log('role', role, router.currentRoute)
+            state.standardItems = fetchStore(`abc/${role}/assets/standard`) || [
+                {
+                    name: '房屋面积（平方米）',
+                    value: null,
+                },
+                {
+                    name: '设备数量（台）',
+                    value: null,
+                },
+                {
+                    name: '人数（人）',
+                    value: null,
+                },
+            ]
+            state.items.office = fetchStore(`abc/${role}/assets/office`) || [
+                { name: '', value: null },
+            ]
+            state.items.college = fetchStore(
+                `abc/president/assets/college`
+            ) || [{ name: '', value: null }]
+
+            state.options.office =
+                fetchStore(`abc/${role}/options/office`) ||
+                (role === 'president' ? ['院长岗位工资'] : [])
+            // }
+            // lastRole = role
+            // localStorage.setItem('abc/lastRole', lastRole)
+
+            return role
+        },
+        getRoleOrigin: (state) => {
+            return state.role
+        },
         // 取是否登录
         isLogin: (state) => {
             if (!state.role) {
                 state.role = localStorage.getItem('abc/role')
                 state.nickname = localStorage.getItem('abc/nickname')
-
-                if (state.role) {
+                let role = state.role
+                if (role === 'admin') role = router.currentRoute.query['role']
+                console.log(router.currentRoute)
+                console.log('admin', role)
+                if (role) {
                     state.standardItems = fetchStore(
-                        `abc/${state.role}/assets/standard`
+                        `abc/${role}/assets/standard`
                     ) || [
                         {
                             name: '房屋面积（平方米）',
@@ -66,15 +111,15 @@ const store = new Vuex.Store({
                         },
                     ]
                     state.items.office = fetchStore(
-                        `abc/${state.role}/assets/office`
+                        `abc/${role}/assets/office`
                     ) || [{ name: '', value: null }]
                     state.items.college = fetchStore(
                         `abc/president/assets/college`
                     ) || [{ name: '', value: null }]
 
                     state.options.office =
-                        fetchStore(`abc/${state.role}/options/office`) ||
-                        (state.role === 'president' ? ['院长岗位工资'] : [])
+                        fetchStore(`abc/${role}/options/office`) ||
+                        (role === 'president' ? ['院长岗位工资'] : [])
                 }
             }
 
@@ -115,9 +160,11 @@ const store = new Vuex.Store({
         },
         initItems(state) {
             if (!state.role) return
-            state.standardItems = fetchStore(
-                `abc/${state.role}/assets/standard`
-            ) || [
+            let role = state.role
+            if (role === 'admin') {
+                role = router.currentRoute.query['role']
+            }
+            state.standardItems = fetchStore(`abc/${role}/assets/standard`) || [
                 {
                     name: '房屋面积（平方米）',
                     value: null,
@@ -131,16 +178,16 @@ const store = new Vuex.Store({
                     value: null,
                 },
             ]
-            state.items.office = fetchStore(
-                `abc/${state.role}/assets/office`
-            ) || [{ name: '', value: null }]
+            state.items.office = fetchStore(`abc/${role}/assets/office`) || [
+                { name: '', value: null },
+            ]
             state.items.college = fetchStore(
                 `abc/president/assets/college`
             ) || [{ name: '', value: null }]
 
             state.options.office =
-                fetchStore(`abc/${state.role}/options/office`) ||
-                (state.role === 'president' ? ['院长岗位工资'] : [])
+                fetchStore(`abc/${role}/options/office`) ||
+                (role === 'president' ? ['院长岗位工资'] : [])
         },
         setOfficeOptions(state, options) {
             state.options.office = options

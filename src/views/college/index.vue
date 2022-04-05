@@ -156,6 +156,7 @@ export default {
 
     // 页面加载时，获取资源填写
     created() {
+        this.$store.getters.getRole
         this.form.items = this.$store.getters.getCollegeItems
     },
 

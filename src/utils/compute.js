@@ -213,7 +213,7 @@ const processData = () => {
             res['学生管理']['房屋折旧'] +
             res['学生管理']['行政老师工资'] +
             res['学生管理']['活动经费'] +
-            res['学生管理']['共同体系统折旧'] +
+            res['学生管理']['共同体系统'] +
             res['学生管理']['学院管理']
 
         // 学生管理
@@ -838,4 +838,287 @@ export const exportData = () => {
 
     // ！！！！！！！！下载文件
     fileDownload(exportData, 'export.xlsx') // 这里可以改导出文件名
+}
+
+// 作业成本归集
+export const exportData1 = () => {
+    const data = processData()
+
+    // 展示的表头，右边才是实际显示的
+    const headerDisplay = { 作业: '作业', 作业成本归集: '作业成本归集' }
+
+    const header = Object.keys(headerDisplay)
+
+    // ========= 导出的sheet =========
+    let sheet = [
+        {
+            作业: '学院管理',
+            作业成本归集: data['学院管理'].total,
+        },
+        {
+            作业: '教学管理费用（教科办）',
+            作业成本归集: data['教学事务管理'].total,
+        },
+        {
+            作业: '学生管理',
+            作业成本归集: data['学生管理'].total,
+        },
+        {
+            作业: '党团建设',
+            作业成本归集: data['党团建设'].total,
+        },
+        {
+            作业: '社团管理',
+            作业成本归集: data['社团管理'].total,
+        },
+        {
+            作业: '科研竞赛',
+            作业成本归集: data['科研竞赛'].total,
+        },
+        {
+            作业: '思政课程教学',
+            作业成本归集: data['思政课程教学'].total,
+        },
+    ]
+
+    // ======
+    sheet = [headerDisplay, ...sheet]
+
+    const worksheet = xlsx.utils.json_to_sheet(sheet, {
+        header: header,
+        skipHeader: true,
+    })
+
+    // ==== 一些表格格式配置，如每格宽度
+    const colsconfig = []
+    Object.keys(header).forEach((key) => {
+        colsconfig.push({
+            wch: 20,
+        })
+    })
+
+    worksheet['!cols'] = colsconfig //设置列属性
+
+    // ====
+
+    Object.keys(worksheet).forEach((key) => {
+        //设置单元格属性，但好像不起作用
+        if (key.indexOf('!') < 0) {
+            worksheet[key].s = {
+                alignment: {
+                    horizontal: 'center',
+                    vertical: 'center',
+                    wrapText: true,
+                },
+                border: {
+                    left: { style: 'thin' },
+                    right: { style: 'thin' },
+                    top: { style: 'thin' },
+                    bottom: { style: 'thin' },
+                },
+            }
+        }
+    })
+
+    const wb = xlsx.utils.book_new()
+    xlsx.utils.book_append_sheet(wb, worksheet, '作业成本归集') // 加入sheet
+    const exportData = workbook2blob(wb, header)
+
+    // ！！！！！！！！下载文件
+    fileDownload(exportData, '作业成本归集.xlsx') // 这里可以改导出文件名
+}
+
+export const exportData2 = () => {
+    const data = processData()
+
+    // 展示的表头，右边才是实际显示的
+    const headerDisplay = {
+        学号: '学号',
+        姓名: '姓名',
+        年级: '年级',
+        专业: '专业',
+        培养成本: '培养成本',
+    }
+
+    const header = Object.keys(headerDisplay)
+
+    // 学院资源
+    const fangwu = fetchCollegeAssets('房屋折旧')
+    const shebei = fetchCollegeAssets('设备折旧')
+    const shui = fetchCollegeAssets('水电费')
+    const bangong = fetchCollegeAssets('办公费用')
+    const shiyan = fetchCollegeAssets('实验耗材')
+    const huodong = fetchCollegeAssets('活动经费')
+    const gongtong = fetchCollegeAssets('共同体系统')
+
+    // 设备资源
+    let deviceCount = fetchStandardByKey('设备数量（台）', shebei)
+    let peopleCount = fetchStandardByKey('人数（人）', bangong) // 人数
+    let waterCount = fetchStandardByKey('房屋面积（平方米）', shui) // 水电费
+    let squareCount = fetchStandardByKey('房屋面积（平方米）', fangwu) // 房屋面积
+
+    // 薪水
+    const salary = fetchSalary()
+    // 成员名单
+    const members = fetchMember()
+    console.log(members)
+
+    // 学生管理总计
+    const studentM =
+        data['学生管理']['活动经费'] +
+        data['学生管理']['房屋折旧'] +
+        data['学生管理']['设备折旧'] +
+        data['学生管理']['共同体系统'] +
+        data['学生管理']['行政老师工资'] +
+        data['学生管理']['学院管理'] +
+        data['学生管理']['办公费用'] +
+        data['学生管理']['水电费']
+
+    // 党团建设总计
+    const dangtuanM =
+        data['党团建设']['活动经费'] +
+        data['党团建设']['房屋折旧'] +
+        data['党团建设']['设备折旧'] +
+        data['党团建设']['行政老师工资'] +
+        data['党团建设']['学院管理'] +
+        data['党团建设']['办公费用'] +
+        data['党团建设']['水电费']
+
+    // 社团管理总计
+    const shetuanM =
+        data['社团管理']['活动经费'] +
+        data['社团管理']['房屋折旧'] +
+        data['社团管理']['设备折旧'] +
+        data['社团管理']['行政老师工资'] +
+        data['社团管理']['学院管理'] +
+        data['社团管理']['办公费用'] +
+        data['社团管理']['水电费']
+
+    // 科研竞赛总计
+    const keyanM =
+        data['科研竞赛']['房屋折旧'] +
+        data['科研竞赛']['设备折旧'] +
+        data['科研竞赛']['水电费'] +
+        data['科研竞赛']['行政老师工资'] +
+        data['科研竞赛']['学院管理'] +
+        data['科研竞赛']['办公费用'] +
+        data['科研竞赛']['实验耗材']
+
+    // 思政课程教学总计
+    const sizhengM =
+        data['思政课程教学']['房屋折旧'] +
+        data['思政课程教学']['设备折旧'] +
+        data['思政课程教学']['行政老师工资'] +
+        data['思政课程教学']['学院管理'] +
+        data['思政课程教学']['办公费用'] +
+        data['思政课程教学']['水电费']
+
+    // 教科办总计
+    const jiaokeTotal =
+        squareCount.data['studyDirector'].fee +
+        deviceCount.data['studyDirector'].fee +
+        waterCount.data['studyDirector'].fee +
+        peopleCount.data['studyDirector'].fee +
+        keepTwoDecimal(
+            (peopleCount.data['studyDirector'].v /
+                (peopleCount.data['studyDirector'].v +
+                    peopleCount.data['staffDirector'].v)) *
+                data['学院管理'].total
+        ) +
+        salary['studyDirector'].total
+
+    // 下面是平均值，除以服务人数的，也就是参与党团建设、科研竞赛的的人次
+    const dangtuanAvg = keepTwoDecimal(
+        dangtuanM /
+            Object.values(members).reduce(
+                (p, c) => p + (c?.con['党团'] || 0),
+                0
+            )
+    )
+
+    const shetuanAvg = keepTwoDecimal(
+        shetuanM /
+            Object.values(members).reduce(
+                (p, c) => p + (c?.con['社团'] || 0),
+                0
+            )
+    )
+
+    const keyanAvg = keepTwoDecimal(
+        keyanM /
+            Object.values(members).reduce(
+                (p, c) => p + (c?.con['竞赛'] || 0),
+                0
+            )
+    )
+
+    const studentAvg = keepTwoDecimal(studentM / Object.keys(members).length)
+    const sizhengAvg = keepTwoDecimal(sizhengM / Object.keys(members).length)
+    const jiaokeAvg = keepTwoDecimal(jiaokeTotal / Object.keys(members).length)
+
+    // ========= 导出的sheet =========
+    let sheet = [
+        ...Object.entries(members).map(([id, member]) => {
+            console.log('1', id, member)
+            return {
+                学号: id,
+                姓名: member.name,
+                年级: member.grade,
+                专业: member.major,
+                培养成本:
+                    (member.con['竞赛'] || 0) * keyanAvg +
+                    (member.con['社团'] || 0) * shetuanAvg +
+                    (member.con['党团'] || 0) * dangtuanAvg +
+                    jiaokeAvg +
+                    studentAvg +
+                    sizhengAvg,
+            }
+        }),
+    ]
+
+    // ======
+    sheet = [headerDisplay, ...sheet]
+
+    const worksheet = xlsx.utils.json_to_sheet(sheet, {
+        header: header,
+        skipHeader: true,
+    })
+
+    // ==== 一些表格格式配置，如每格宽度
+    const colsconfig = []
+    Object.keys(header).forEach((key) => {
+        colsconfig.push({
+            wch: 15,
+        })
+    })
+
+    worksheet['!cols'] = colsconfig //设置列属性
+
+    // ====
+
+    Object.keys(worksheet).forEach((key) => {
+        //设置单元格属性，但好像不起作用
+        if (key.indexOf('!') < 0) {
+            worksheet[key].s = {
+                alignment: {
+                    horizontal: 'center',
+                    vertical: 'center',
+                    wrapText: true,
+                },
+                border: {
+                    left: { style: 'thin' },
+                    right: { style: 'thin' },
+                    top: { style: 'thin' },
+                    bottom: { style: 'thin' },
+                },
+            }
+        }
+    })
+
+    const wb = xlsx.utils.book_new()
+    xlsx.utils.book_append_sheet(wb, worksheet, '培养成本') // 加入sheet
+    const exportData = workbook2blob(wb, header)
+
+    // ！！！！！！！！下载文件
+    fileDownload(exportData, '培养成本.xlsx') // 这里可以改导出文件名
 }

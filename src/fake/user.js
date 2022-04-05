@@ -1,6 +1,12 @@
 // 账号表，其中role只能是以下四种，其他随意更改
 export const userList = [
     {
+        username: 'p000',
+        password: '123456',
+        nickname: '管理员',
+        role: 'admin',
+    },
+    {
         username: 'p001',
         password: '123456',
         nickname: '院长',

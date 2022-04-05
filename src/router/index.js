@@ -13,7 +13,7 @@ const routes = [
         children: [
             {
                 path: '/',
-                redirect: '/assets/office',
+                redirect: '/assets/export',
             },
             {
                 path: '/assets/office',

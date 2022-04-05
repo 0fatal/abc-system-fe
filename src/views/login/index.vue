@@ -1,5 +1,7 @@
 <template>
-    <div class="flex justify-center items-center bg-blue-200 w-screen h-screen">
+    <div
+        class="page-login flex justify-center items-center bg-blue-200 w-screen h-screen"
+    >
         <el-card class="w-[400px] mt-[50px] h-[300px]">
             <div slot="header">
                 <span>登录</span>
@@ -43,7 +45,7 @@ export default {
         return {
             form: {
                 // 默认填在页面上的账号密码，可以改
-                username: 'p001',
+                username: 'p000',
                 password: '123456',
             },
             rules: {
@@ -83,3 +85,12 @@ export default {
     },
 }
 </script>
+
+<style>
+.page-login {
+    background-image: url('@/assets/bg.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+</style>

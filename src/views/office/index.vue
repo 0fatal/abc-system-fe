@@ -1,7 +1,11 @@
 <template>
     <el-card class="common-card">
         <div slot="header" class="header flex justify-between">
-            <strong>{{ routeMap[$route.path] }}</strong>
+            <strong>{{
+                getRoleName($store.getters.getRole) +
+                ' / ' +
+                routeMap[$route.path]
+            }}</strong>
             <el-button
                 type="warning"
                 size="mini"
@@ -143,7 +147,7 @@
 
 <script>
 import { parseXLSXFile } from '@/utils/myxlsx'
-import { Route2MenuItemNameMap } from '@/role/role'
+import { getRoleName, Route2MenuItemNameMap } from '@/role/role'
 import { confirmInput, hasImportMembers } from '@/utils/storage'
 
 export default {
@@ -160,6 +164,7 @@ export default {
     methods: {
         // 函数：是否已经导入成员名单
         hasImportMembers: hasImportMembers,
+        getRoleName: getRoleName,
 
         // 函数：添加资源
         handlePlus() {
@@ -293,10 +298,15 @@ export default {
             )
             this.$message.success('保存成功！')
         },
+
+        handleVisibilityChange() {
+            window.location.reload()
+        },
     },
 
     // 页面创建时初始化上次填写的数据
     created() {
+        this.$store.getters['getRole']
         if (
             this.$store.getters.getOfficeItems[0].name === '' &&
             this.$route.path === '/assets/office' &&
@@ -312,6 +322,12 @@ export default {
         this.form.items = this.$store.getters.getOfficeItems
         this.options = this.$store.getters.getOfficeOptions
     },
+
+    // watch: {
+    //     $route(to, from) {
+    //         window.location.reload()
+    //     },
+    // },
 
     // 页面关闭前保存填写到缓存，但不保存到本地
     beforeDestroy() {

@@ -1,7 +1,11 @@
 <template>
     <el-container class="container">
-        <el-aside width="150px">
-            <Aside class="aside" />
+        <el-aside width="170px">
+            <Aside
+                class="aside"
+                v-if="this.$store.getters.getRoleOrigin !== 'admin'"
+            />
+            <AdminAside class="aside" v-else></AdminAside>
         </el-aside>
         <el-main class="main" style="padding: 0">
             <el-header>
@@ -17,6 +21,7 @@
 <script>
 import Header from './components/Header.vue'
 import Aside from './components/Aside.vue'
+import AdminAside from './components/AdminAside.vue'
 
 export default {
     name: 'Layout',
@@ -24,6 +29,7 @@ export default {
     components: {
         Aside: Aside,
         Header: Header,
+        AdminAside: AdminAside,
     },
     data() {
         return {}

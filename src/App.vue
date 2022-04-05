@@ -8,6 +8,18 @@
     </div>
 </template>
 
+<script>
+export default {
+    watch: {
+        $route(to, from) {
+            if (from.path !== '/' && to.path !== '/') {
+                window.location.replace(to.fullPath)
+            }
+        },
+    },
+}
+</script>
+
 <style>
 #app {
     font-family: Avenir, Helvetica, Arial, sans-serif;
