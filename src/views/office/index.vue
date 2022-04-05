@@ -260,12 +260,12 @@ export default {
                         if (user[v] === undefined) {
                             user[v] = {}
                             user[v].con = {}
-                            if (sheetName === '全院名单') {
-                                user[v].name = sheet[`B${x}`].v
-                                user[v].grade = sheet[`C${x}`].v
-                                user[v].major = sheet[`D${x}`].v
-                                user[v].class = sheet[`E${x}`].v
-                            }
+                        }
+                        if (sheetName === '全院名单') {
+                            user[v].name = sheet[`B${x}`].v
+                            user[v].grade = sheet[`C${x}`].v
+                            user[v].major = sheet[`D${x}`].v
+                            user[v].class = sheet[`E${x}`].v
                         }
                         if (user[v].con[sheetName] === undefined) {
                             user[v].con[sheetName] = 0
