@@ -1,5 +1,19 @@
 <template>
     <div class="header">
+        <el-select
+            class="ml-10"
+            size="mini"
+            v-model="collegeValue"
+            v-if="$store.getters.getRoleOrigin === 'admin'"
+        >
+            <el-option
+                v-for="(option, idx) in collegeOptions"
+                :label="option"
+                :key="idx"
+                :value="option"
+            >
+            </el-option>
+        </el-select>
         <div class="info">
             <div class="nickname">你好，{{ $store.getters.nickname }}</div>
             <el-dropdown size="medium" @command="logout">
@@ -19,6 +33,17 @@
 <script>
 export default {
     name: 'Header',
+    data() {
+        return {
+            collegeOptions: [
+                '卓越学院',
+                '圣光机联合学院',
+                '继续教育学院',
+                '国际教育学院',
+            ],
+            collegeValue: '卓越学院', // 默认学院
+        }
+    },
     methods: {
         async logout() {
             await this.$store.dispatch('logout')
@@ -36,11 +61,11 @@ export default {
     height: 100%;
     display: flex;
     align-items: center;
+    justify-content: space-between;
 }
 
 .info {
     margin-left: auto;
-    justify-self: flex-end;
     display: flex;
     align-items: center;
     margin-right: 30px;

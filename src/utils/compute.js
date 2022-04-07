@@ -879,6 +879,20 @@ export const exportData1 = () => {
             作业: '思政课程教学',
             作业成本归集: data['思政课程教学'].total,
         },
+        {
+            作业: ' ',
+        },
+        {
+            作业: '总计',
+            作业成本归集:
+                data['学院管理'].total +
+                data['教学事务管理'].total +
+                data['学生管理'].total +
+                data['党团建设'].total +
+                data['社团管理'].total +
+                data['科研竞赛'].total +
+                data['思政课程教学'].total,
+        },
     ]
 
     // ======
@@ -1057,9 +1071,16 @@ export const exportData2 = () => {
     const jiaokeAvg = keepTwoDecimal(jiaokeTotal / Object.keys(members).length)
 
     // ========= 导出的sheet =========
+    let money = 0
     let sheet = [
         ...Object.entries(members).map(([id, member]) => {
-            console.log('1', id, member)
+            money +=
+                (member.con['竞赛'] || 0) * keyanAvg +
+                (member.con['社团'] || 0) * shetuanAvg +
+                (member.con['党团'] || 0) * dangtuanAvg +
+                jiaokeAvg +
+                studentAvg +
+                sizhengAvg
             return {
                 学号: id,
                 姓名: member.name,
@@ -1074,6 +1095,13 @@ export const exportData2 = () => {
                     sizhengAvg,
             }
         }),
+        {
+            学号: ' ',
+        },
+        {
+            专业: '总计',
+            培养成本: money,
+        },
     ]
 
     // ======
