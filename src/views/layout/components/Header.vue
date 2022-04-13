@@ -50,6 +50,14 @@ export default {
             this.$router.push('/login')
         },
     },
+
+    watch: {
+        collegeValue(val) {
+            if(val === '圣光机联合学院') {
+                window.location.href = 'https://shengguangji.abc-system-fe.pages.dev'
+            }
+        },
+    },
 }
 </script>
 
