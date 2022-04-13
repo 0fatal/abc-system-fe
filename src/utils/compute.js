@@ -91,7 +91,7 @@ const processData = () => {
     const bangong = fetchCollegeAssets('办公费用')
     const shiyan = fetchCollegeAssets('实验耗材')
     const huodong = fetchCollegeAssets('活动经费')
-    const gongtong = fetchCollegeAssets('共同体系统')
+    const gongtong = fetchCollegeAssets('考评系统')
     const yuangong = fetchCollegeAssets('院长岗位工资')
     console.log(
         'fangwu',
@@ -198,7 +198,7 @@ const processData = () => {
                     bangong
             ),
             活动经费: keepTwoDecimal((2 / 4) * huodong),
-            共同体系统: gongtong,
+            考评系统: gongtong,
             学院管理: keepTwoDecimal(
                 (((2 / 6) * peopleCount.data['staffDirector'].v) /
                     (peopleCount.data['staffDirector'].v +
@@ -213,7 +213,7 @@ const processData = () => {
             res['学生管理']['房屋折旧'] +
             res['学生管理']['行政老师工资'] +
             res['学生管理']['活动经费'] +
-            res['学生管理']['共同体系统'] +
+            res['学生管理']['考评系统'] +
             res['学生管理']['学院管理']
 
         // 学生管理
@@ -272,7 +272,7 @@ const processData = () => {
                     shui
             ),
             行政老师工资: keepTwoDecimal(
-                (1 / 3) * salary['staffDirector'].gangwei.data['周老师岗位工资']
+                (1 / 3) * salary['staffDirector'].gangwei.data['刘璐老师岗位工资']
             ),
             办公费用: keepTwoDecimal(
                 (1 / 6) *
@@ -314,7 +314,7 @@ const processData = () => {
                     shui
             ),
             行政老师工资: keepTwoDecimal(
-                (1 / 3) * salary['staffDirector'].gangwei.data['赵老师岗位工资']
+                (1 / 3) * salary['staffDirector'].gangwei.data['吕老师岗位工资']
             ),
             办公费用: keepTwoDecimal(
                 (1 / 6) *
@@ -356,7 +356,7 @@ const processData = () => {
                     shui
             ),
             行政老师工资: keepTwoDecimal(
-                (1 / 3) * salary['staffDirector'].gangwei.data['何老师岗位工资']
+                (1 / 3) * salary['staffDirector'].gangwei.data['吕老师岗位工资']
             ),
             办公费用: keepTwoDecimal(
                 (1 / 6) *
@@ -455,7 +455,7 @@ export const exportData = () => {
     const bangong = fetchCollegeAssets('办公费用')
     const shiyan = fetchCollegeAssets('实验耗材')
     const huodong = fetchCollegeAssets('活动经费')
-    const gongtong = fetchCollegeAssets('共同体系统')
+    const gongtong = fetchCollegeAssets('考评系统')
 
     // 设备资源
     let deviceCount = fetchStandardByKey('设备数量（台）', shebei)
@@ -474,7 +474,7 @@ export const exportData = () => {
         data['学生管理']['活动经费'] +
         data['学生管理']['房屋折旧'] +
         data['学生管理']['设备折旧'] +
-        data['学生管理']['共同体系统'] +
+        data['学生管理']['考评系统'] +
         data['学生管理']['行政老师工资'] +
         data['学生管理']['学院管理'] +
         data['学生管理']['办公费用'] +
@@ -657,10 +657,10 @@ export const exportData = () => {
             比例: '(2:1:1)',
         },
         {
-            资源: '共同体系统',
+            资源: '考评系统',
             总费用: gongtong,
-            学生管理: data['学生管理']['共同体系统'],
-            学工办合计: data['学生管理']['共同体系统'],
+            学生管理: data['学生管理']['考评系统'],
+            学工办合计: data['学生管理']['考评系统'],
         },
         {
             资源: '实验耗材',
@@ -691,7 +691,7 @@ export const exportData = () => {
             return Object.entries(v.gangwei.data).map(([k, v1]) => {
                 console.log('kv', k, v1)
                 // k是老师名字，v1是岗位工资，其他是分配情况
-                if (k.match(/赵/)) {
+                if (k.match(/吕/)) {
                     // 如果是赵老师
                     return {
                         工资: k,
@@ -700,7 +700,7 @@ export const exportData = () => {
                         科研竞赛: keepTwoDecimal((1 / 3) * v1),
                     }
                 }
-                if (k.match(/何/)) {
+                if (k.match(/吕/)) {
                     return {
                         工资: k,
                         总费用: v1,
@@ -708,7 +708,7 @@ export const exportData = () => {
                         党团建设: keepTwoDecimal((1 / 3) * v1),
                     }
                 }
-                if (k.match(/周/)) {
+                if (k.match(/刘璐/)) {
                     return {
                         工资: k,
                         总费用: v1,
@@ -963,7 +963,7 @@ export const exportData2 = () => {
     const bangong = fetchCollegeAssets('办公费用')
     const shiyan = fetchCollegeAssets('实验耗材')
     const huodong = fetchCollegeAssets('活动经费')
-    const gongtong = fetchCollegeAssets('共同体系统')
+    const gongtong = fetchCollegeAssets('考评系统')
 
     // 设备资源
     let deviceCount = fetchStandardByKey('设备数量（台）', shebei)
@@ -982,7 +982,7 @@ export const exportData2 = () => {
         data['学生管理']['活动经费'] +
         data['学生管理']['房屋折旧'] +
         data['学生管理']['设备折旧'] +
-        data['学生管理']['共同体系统'] +
+        data['学生管理']['考评系统'] +
         data['学生管理']['行政老师工资'] +
         data['学生管理']['学院管理'] +
         data['学生管理']['办公费用'] +

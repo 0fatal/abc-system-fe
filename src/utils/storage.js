@@ -1,7 +1,9 @@
-import { roleMap } from '@/role/role'
+import { assetsMap, roleMap } from '@/role/role'
 
 // 判断某个角色是否已经完成填写，具体实现：判断是否有对应的本地存储
 export const getIsInput = (role) => {
+    console.log(assetsMap)
+
     // 如果是学工办，还得确认名单是否已导入
     if (role === 'staffDirector') {
         if (!localStorage.getItem(`abc/member`)) {
@@ -9,13 +11,15 @@ export const getIsInput = (role) => {
         }
     }
     // 遍历每个资源
-    for (const route of roleMap[role].routes) {
-        console.log(route)
+
+    for (const route of assetsMap[role].routes) {
         if (route === '/assets/export') continue
+
         if (!localStorage.getItem(`abc/${role}${route}`)) {
             return false
         }
     }
+
     return true
 }
 

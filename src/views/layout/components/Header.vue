@@ -41,7 +41,7 @@ export default {
                 '继续教育学院',
                 '国际教育学院',
             ],
-            collegeValue: '卓越学院', // 默认学院
+            collegeValue: '圣光机联合学院', // 默认学院
         }
     },
     methods: {

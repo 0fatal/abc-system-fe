@@ -7,7 +7,7 @@
         :default-active="$route.fullPath"
         router
     >
-        <header class="text-yellow-300 p-5">委培学院ABC系统</header>
+        <header class="text-yellow-300 p-5">圣光联合学院ABC系统</header>
         <el-submenu index="1">
             <template slot="title">
                 <i class="el-icon-location"></i>

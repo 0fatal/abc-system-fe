@@ -9,7 +9,7 @@
         :default-active="$route.path"
         router
     >
-        <header class="text-yellow-300 p-5">委培学院ABC系统</header>
+        <header class="text-yellow-300 p-5">圣光机联合学院ABC系统</header>
         <el-menu-item
             v-for="route in $store.getters.getRoutes"
             :key="route"

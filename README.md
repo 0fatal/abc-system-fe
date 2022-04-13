@@ -1,4 +1,4 @@
-# 委培学院 ABC 系统
+# 圣光机学院 ABC 系统
 
 #### **线上地址**：https://abc-system-fe.pages.dev
 
