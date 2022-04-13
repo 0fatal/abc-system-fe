@@ -21,7 +21,7 @@ jobs:
         # specify driver for the cloud platform
         driver: qiniu
         # specify region of the cloud platform
-        region: ra9cfpbqe.hd-bkt.clouddn.com
+        region: qiniu.region.z0
         # specify bucket name of the cloud platform
         bucket: abc-system
         # specify exclude the given comma separated directories
