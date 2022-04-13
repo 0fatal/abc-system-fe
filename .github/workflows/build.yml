@@ -4,25 +4,30 @@ on:
     branches:
       - v2
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-      with:
-        fetch-depth: 2
-        path: master
     - uses: actions/setup-node@v2
       with:
         node-version: 14.x
     - name: npm install and build
-      run: |
-        npm install
-        npm run build
-    - uses: Hanlin-Dong/hexo-to-qiniu-action@v1-full
+      run: |
+        npm install
+        npm run build
+    - name: Uptoc Action
+      uses: saltbo/uptoc@v1.4.3
       with:
+        # specify driver for the cloud platform
+        driver: qiniu
+        # specify region of the cloud platform
+        region: ra9cfpbqe.hd-bkt.clouddn.com
+        # specify bucket name of the cloud platform
         bucket: abc-system
-        access-key: ${{ secrets.QINIU_ACCESS_KEY }}
-        secret-key: ${{ secrets.QINIU_SECRET_KEY }}
-        base-folder: v2
-        domain: "http://abc.io"
-        sub-domain: ""
+        # specify exclude the given comma separated directories
+        # specify dist of the local directory
+        dist: dist
+      env:
+        UPTOC_UPLOADER_AK: ${{ secrets.QINIU_ACCESS_KEY }}
+        UPTOC_UPLOADER_SK: ${{ secrets.QINIU_SECRET_KEY }}
+
