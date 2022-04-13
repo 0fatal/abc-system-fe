@@ -54,8 +54,12 @@ export default {
     watch: {
         collegeValue(val) {
             if(val === '圣光机联合学院') {
-                window.location.href = 'https://shengguangji.abc-system-fe.pages.dev'
-            }
+                if(process.env.NODE_ENV === "development") {
+                    window.location.href = 'http://localhost:3001'
+                } else {
+                    window.location.href = 'https://shengguangji.abc-system-fe.pages.dev'
+                }
+            } 
         },
     },
 }
