@@ -50,6 +50,14 @@ export default {
             this.$router.push('/login')
         },
     },
+
+    watch: {
+        collegeValue(val) {
+            if(val === '卓越学院') {
+                window.location.href = 'https://v2.abc-system-fe.pages.dev'
+            }
+        },
+    },
 }
 </script>
 
