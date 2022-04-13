@@ -27,6 +27,7 @@ jobs:
         # specify exclude the given comma separated directories
         # specify dist of the local directory
         dist: dist
+        saveroot: v2
       env:
         UPTOC_UPLOADER_AK: ${{ secrets.QINIU_ACCESS_KEY }}
         UPTOC_UPLOADER_SK: ${{ secrets.QINIU_SECRET_KEY }}
