@@ -54,7 +54,12 @@ export default {
     watch: {
         collegeValue(val) {
             if(val === '卓越学院') {
-                window.location.href = 'https://v2.abc-system-fe.pages.dev'
+                if(process.env.NODE_ENV === "development") {
+                    window.location.href = 'http://localhost:8080'
+                } else {
+                    window.location.href = 'https://v2.abc-system-fe.pages.dev'
+                }
+                
             }
         },
     },
