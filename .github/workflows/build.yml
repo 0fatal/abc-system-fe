@@ -1,0 +1,28 @@
+name: build
+on:
+  push:
+    branches:
+      - v2
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: 2
+        path: master
+    - uses: actions/setup-node@v2
+      with:
+        node-version: 14.x
+    - name: npm install and build
+      run: |
+        npm install
+        npm run build
+    - uses: Hanlin-Dong/hexo-to-qiniu-action@v1-full
+      with:
+        bucket: abc-system
+        access-key: ${{ secrets.QINIU_ACCESS_KEY }}
+        secret-key: ${{ secrets.QINIU_SECRET_KEY }}
+        base-folder: v2
+        domain: "http://abc.io"
+        sub-domain: ""
