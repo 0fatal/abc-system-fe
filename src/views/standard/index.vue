@@ -39,6 +39,57 @@
                 ></el-input>
             </el-form-item>
         </el-form>
+        <div class="h-[50px]"></div>
+        <el-table class="mx-[50px]" :data="tableData" v-if="$store.getters.getRoleOrigin === 'admin'" border style="width: 100%">
+            <el-table-column
+                fixed
+                prop="type"
+                label=""
+                width="150">
+            </el-table-column>
+            <el-table-column
+                fixed
+                prop="学生管理"
+                label="学生管理"
+                width="150">
+                    <template slot-scope="scope">
+                        <el-input v-model="tableData[scope.$index]['学生管理']"></el-input>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                fixed
+                prop="党团建设"
+                label="党团建设"
+                width="150">
+                 <template slot-scope="scope">
+                        <el-input v-model="tableData[scope.$index]['党团建设']"></el-input>
+                    </template>
+                    </el-table-column>
+                <el-table-column
+                fixed
+                prop="社团管理"
+                label="社团管理"
+                width="150">
+                 <template slot-scope="scope">
+                        <el-input v-model="tableData[scope.$index]['社团管理']"></el-input>
+                    </template></el-table-column>
+                <el-table-column
+                fixed
+                prop="科研竞赛"
+                label="科研竞赛"
+                width="150">
+                 <template slot-scope="scope">
+                        <el-input v-model="tableData[scope.$index]['科研竞赛']"></el-input>
+                    </template></el-table-column>
+                <el-table-column
+                fixed
+                prop="思政课程教学"
+                label="思政课程教学"
+                width="150">
+                 <template slot-scope="scope">
+                        <el-input v-model="tableData[scope.$index]['思政课程教学']"></el-input>
+                    </template></el-table-column>
+        </el-table>
         <el-backtop target=".common-card"></el-backtop>
     </el-card>
 </template>
@@ -56,6 +107,40 @@ export default {
                 // 保存每个下拉框值的变量
                 standardItems: [],
             },
+            tableData: [
+                {
+                    type: '学工办整体',
+                    学生管理: 2,
+                    党团建设: 1,
+                    社团管理: 1,
+                    科研竞赛: 1,
+                    思政课程教学: 1,
+                },
+                {
+                    type: '赵老师',
+                    学生管理: 2,
+                    党团建设: 0,
+                    社团管理: 0,
+                    科研竞赛: 1,
+                    思政课程教学: 0,
+                },
+                {
+                    type: '周老师',
+                    学生管理: 2,
+                    党团建设: 0,
+                    社团管理: 1,
+                    科研竞赛: 0,
+                    思政课程教学: 0,
+                },
+                {
+                    type: '何老师',
+                    学生管理: 2,
+                    党团建设: 1,
+                    社团管理: 0,
+                    科研竞赛: 0,
+                    思政课程教学: 0,
+                }
+            ]
         }
     },
     methods: {
@@ -65,7 +150,8 @@ export default {
             confirmInput(
                 this.$store.getters.getRole,
                 this.$route.path,
-                this.form.standardItems
+                this.form.standardItems,
+                this.tableData
             )
             this.$message.success('保存成功！')
         },
