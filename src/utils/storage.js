@@ -1,4 +1,4 @@
-import { roleMap } from '@/role/role'
+import { assetsMap, roleMap } from '@/role/role'
 
 // 判断某个角色是否已经完成填写，具体实现：判断是否有对应的本地存储
 export const getIsInput = (role) => {
@@ -9,7 +9,7 @@ export const getIsInput = (role) => {
         }
     }
     // 遍历每个资源
-    for (const route of roleMap[role].routes) {
+    for (const route of assetsMap[role].routes) {
         console.log(route)
         if (route === '/assets/export') continue
         if (!localStorage.getItem(`abc/${role}${route}`)) {
