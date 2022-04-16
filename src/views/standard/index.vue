@@ -40,11 +40,15 @@
             </el-form-item>
         </el-form>
         <div class="h-[50px]"></div>
-        <h1 class="text-left ml-[50px]">分配比例</h1>
+        <h1
+            v-if="$store.getters.getRole === 'staffDirector'"
+            class="text-left ml-[50px]"
+        >
+            分配比例
+        </h1>
         <el-table
             class="mx-[50px]"
             :data="tableData"
-            v-if="$store.getters.getRole === 'staffDirector'"
             border
             style="width: 100%"
         >
