@@ -71,7 +71,7 @@ const urlsafencode = (jsonFlags) => {
 }
 
 export const uploadFile = (file, filename) => {
-    const bucket = 'abc-system-fe:tmp\\' + filename
+    const bucket = 'abc-system-fe:tmp/' + filename
 
     return new Promise((resolve, reject) => {
         const options = {
