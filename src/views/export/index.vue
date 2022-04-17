@@ -26,6 +26,28 @@
                     : ''
             }}
         </p>
+        <div class="flex justify-end mt-[30px] pr-[50px]">
+            <div class="space-y-2">
+                <el-button
+                    type="success"
+                    @click="handlePreview"
+                    :disabled="!getAllIsInput()"
+                    >预览详细汇总表</el-button
+                >
+                <el-button
+                    type="success"
+                    @click="handlePreview1"
+                    :disabled="!getAllIsInput()"
+                    >预览作业成本归集表</el-button
+                >
+                <el-button
+                    type="success"
+                    @click="handlePreview2"
+                    :disabled="!getAllIsInput()"
+                    >预览培养成本表</el-button
+                >
+            </div>
+        </div>
 
         <div class="flex justify-end mt-[30px] pr-[50px]">
             <div class="space-y-2">
@@ -49,6 +71,21 @@
                 >
             </div>
         </div>
+        <el-dialog
+            title="预览"
+            :visible.sync="dialogFormVisible"
+            width="90%"
+            append-to-body
+        >
+            <iframe :src="previewUrl" width="100%" height="700" frameborder="1">
+            </iframe>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="dialogFormVisible = false">取 消</el-button>
+                <el-button type="primary" @click="dialogFormVisible = false"
+                    >确 定</el-button
+                >
+            </div>
+        </el-dialog>
     </el-card>
 </template>
 
@@ -87,6 +124,8 @@ export default {
                     ],
                 },
             ],
+            dialogFormVisible: false,
+            previewUrl: '',
         }
     },
     computed: {
@@ -142,6 +181,35 @@ export default {
             }
             exportData2()
             this.$message.success('导出成功')
+        },
+
+        // 函数：导出
+        async handlePreview() {
+            if (!getAllIsInput()) {
+                this.$message.error('预览失败，不是所有角色都已确认填报')
+                return
+            }
+            const url = await exportData(true)
+            this.previewUrl = url
+            this.dialogFormVisible = true
+        },
+        async handlePreview1() {
+            if (!getAllIsInput()) {
+                this.$message.error('预览失败，不是所有角色都已确认填报')
+                return
+            }
+            const url = await exportData1(true)
+            this.previewUrl = url
+            this.dialogFormVisible = true
+        },
+        async handlePreview2() {
+            if (!getAllIsInput()) {
+                this.$message.error('预览失败，不是所有角色都已确认填报')
+                return
+            }
+            const url = await exportData2(true)
+            this.previewUrl = url
+            this.dialogFormVisible = true
         },
     },
 }
