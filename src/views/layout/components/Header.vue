@@ -36,12 +36,12 @@ export default {
     data() {
         return {
             collegeOptions: [
-                '卓越学院',
+                '委培学院',
                 '圣光机联合学院',
                 '继续教育学院',
                 '国际教育学院',
             ],
-            collegeValue: '卓越学院', // 默认学院
+            collegeValue: '委培学院', // 默认学院
         }
     },
     methods: {
@@ -53,13 +53,14 @@ export default {
 
     watch: {
         collegeValue(val) {
-            if(val === '圣光机联合学院') {
-                if(process.env.NODE_ENV === "development") {
+            if (val === '圣光机联合学院') {
+                if (process.env.NODE_ENV === 'development') {
                     window.location.href = 'http://localhost:3001'
                 } else {
-                    window.location.href = 'https://shengguangji.abc-system-fe.pages.dev'
+                    window.location.href =
+                        'https://shengguangji.abc-system-fe.pages.dev'
                 }
-            } 
+            }
         },
     },
 }
