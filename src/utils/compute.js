@@ -134,6 +134,8 @@ const processData = () => {
     // 计算每块分类的费用
     const computeFeeClassify = () => {
         const res = {}
+
+        const r = fetchStore('abc/staffDirector/rate')
         // 学院管理
         res['学院管理'] = {
             房屋折旧:
@@ -175,32 +177,39 @@ const processData = () => {
         // 学生管理
         res['学生管理'] = {
             房屋折旧: keepTwoDecimal(
-                (2 / 6) *
+                (r.X1 / r.T1) *
                     (squareCount.data['staffDirector'].v / squareCount.total) *
                     fangwu
             ),
             设备折旧: keepTwoDecimal(
-                (2 / 6) *
+                (r.X1 / r.T1) *
                     (deviceCount.data['staffDirector'].v / deviceCount.total) *
                     shebei
             ),
             水电费: keepTwoDecimal(
-                (2 / 6) *
+                (r.X1 / r.T1) *
                     (squareCount.data['staffDirector'].v / squareCount.total) *
                     shui
             ),
             行政老师工资: keepTwoDecimal(
-                (2 / 3) * salary['staffDirector'].gangwei.total
+                (r.X2 / r.T2) *
+                    salary['staffDirector'].gangwei.data['刘璐老师岗位工资'] +
+                    (r.X3 / r.T3) *
+                        salary['staffDirector'].gangwei.data['吕老师岗位工资'] +
+                    (r.X4 / r.T4) *
+                        salary['staffDirector'].gangwei.data[
+                            '刘剑飞老师岗位工资'
+                        ]
             ),
             办公费用: keepTwoDecimal(
-                (2 / 6) *
+                (r.X1 / r.T1) *
                     (peopleCount.data['staffDirector'].v / peopleCount.total) *
                     bangong
             ),
-            活动经费: keepTwoDecimal((2 / 4) * huodong),
+            活动经费: keepTwoDecimal((r.X5 / r.T5) * huodong),
             考评系统: gongtong,
             学院管理: keepTwoDecimal(
-                (((2 / 6) * peopleCount.data['staffDirector'].v) /
+                (((r.X1 / r.T1) * peopleCount.data['staffDirector'].v) /
                     (peopleCount.data['staffDirector'].v +
                         peopleCount.data['studyDirector'].v)) *
                     res['学院管理'].total
@@ -219,28 +228,28 @@ const processData = () => {
         // 学生管理
         res['思政课程教学'] = {
             房屋折旧: keepTwoDecimal(
-                (1 / 6) *
+                (r.E / r.T1) *
                     (squareCount.data['staffDirector'].v / squareCount.total) *
                     fangwu
             ),
             设备折旧: keepTwoDecimal(
-                (1 / 6) *
+                (r.E / r.T1) *
                     (deviceCount.data['staffDirector'].v / deviceCount.total) *
                     shebei
             ),
             水电费: keepTwoDecimal(
-                (1 / 6) *
+                (r.E / r.T1) *
                     (squareCount.data['staffDirector'].v / squareCount.total) *
                     shui
             ),
             行政老师工资: salary['staffDirector'].shouke.total,
             办公费用: keepTwoDecimal(
-                (1 / 6) *
+                (r.E / r.T1) *
                     (peopleCount.data['staffDirector'].v / peopleCount.total) *
                     bangong
             ),
             学院管理: keepTwoDecimal(
-                (((1 / 6) * peopleCount.data['staffDirector'].v) /
+                (((r.E / r.T1) * peopleCount.data['staffDirector'].v) /
                     (peopleCount.data['staffDirector'].v +
                         peopleCount.data['studyDirector'].v)) *
                     res['学院管理'].total
@@ -257,31 +266,38 @@ const processData = () => {
 
         res['社团管理'] = {
             房屋折旧: keepTwoDecimal(
-                (1 / 6) *
+                (r.S1 / r.T1) *
                     (squareCount.data['staffDirector'].v / squareCount.total) *
                     fangwu
             ),
             设备折旧: keepTwoDecimal(
-                (1 / 6) *
+                (r.S1 / r.T1) *
                     (deviceCount.data['staffDirector'].v / deviceCount.total) *
                     shebei
             ),
             水电费: keepTwoDecimal(
-                (1 / 6) *
+                (r.S1 / r.T1) *
                     (squareCount.data['staffDirector'].v / squareCount.total) *
                     shui
             ),
             行政老师工资: keepTwoDecimal(
-                (1 / 3) * salary['staffDirector'].gangwei.data['刘璐老师岗位工资']
+                (r.S2 / r.T2) *
+                    salary['staffDirector'].gangwei.data['刘璐老师岗位工资'] +
+                    (r.S3 / r.T3) *
+                        salary['staffDirector'].gangwei.data['吕老师岗位工资'] +
+                    (r.S4 / r.T4) *
+                        salary['staffDirector'].gangwei.data[
+                            '刘剑飞老师岗位工资'
+                        ]
             ),
             办公费用: keepTwoDecimal(
-                (1 / 6) *
+                (r.S1 / r.T4) *
                     (peopleCount.data['staffDirector'].v / peopleCount.total) *
                     bangong
             ),
-            活动经费: keepTwoDecimal((1 / 4) * huodong),
+            活动经费: keepTwoDecimal((r.S5 / r.T5) * huodong),
             学院管理: keepTwoDecimal(
-                (((1 / 6) * peopleCount.data['staffDirector'].v) /
+                (((r.S1 / r.T1) * peopleCount.data['staffDirector'].v) /
                     (peopleCount.data['staffDirector'].v +
                         peopleCount.data['studyDirector'].v)) *
                     res['学院管理'].total
@@ -299,31 +315,39 @@ const processData = () => {
 
         res['科研竞赛'] = {
             房屋折旧: keepTwoDecimal(
-                (1 / 6) *
+                (r.K1 / r.T1) *
                     (squareCount.data['staffDirector'].v / squareCount.total) *
                     fangwu
             ),
             设备折旧: keepTwoDecimal(
-                (1 / 6) *
+                (r.K1 / r.T1) *
                     (deviceCount.data['staffDirector'].v / deviceCount.total) *
                     shebei
             ),
             水电费: keepTwoDecimal(
-                (1 / 6) *
+                (r.K1 / r.T1) *
                     (squareCount.data['staffDirector'].v / squareCount.total) *
                     shui
             ),
             行政老师工资: keepTwoDecimal(
-                (1 / 3) * salary['staffDirector'].gangwei.data['吕老师岗位工资']
+                (r.K2 / r.T2) *
+                    salary['staffDirector'].gangwei.data['刘璐老师岗位工资'] +
+                    (r.K3 / r.T3) *
+                        salary['staffDirector'].gangwei.data['吕老师岗位工资'] +
+                    (r.K4 / r.T4) *
+                        salary['staffDirector'].gangwei.data[
+                            '刘剑飞老师岗位工资'
+                        ]
             ),
             办公费用: keepTwoDecimal(
-                (1 / 6) *
+                (r.K1 / r.T1) *
                     (peopleCount.data['staffDirector'].v / peopleCount.total) *
                     bangong
             ),
             实验耗材: shiyan,
+            活动经费: keepTwoDecimal((r.K5 / r.T5) * huodong),
             学院管理: keepTwoDecimal(
-                (((1 / 6) * peopleCount.data['staffDirector'].v) /
+                (((r.K1 / r.T1) * peopleCount.data['staffDirector'].v) /
                     (peopleCount.data['staffDirector'].v +
                         peopleCount.data['studyDirector'].v)) *
                     res['学院管理'].total
@@ -337,35 +361,43 @@ const processData = () => {
             res['科研竞赛'].房屋折旧 +
             res['科研竞赛'].行政老师工资 +
             res['科研竞赛'].实验耗材 +
-            res['科研竞赛'].学院管理
+            res['科研竞赛'].学院管理 +
+            res['科研竞赛'].活动经费
 
         res['党团建设'] = {
             房屋折旧: keepTwoDecimal(
-                (1 / 6) *
+                (r.D1 / r.T1) *
                     (squareCount.data['staffDirector'].v / squareCount.total) *
                     fangwu
             ),
             设备折旧: keepTwoDecimal(
-                (1 / 6) *
+                (r.D1 / r.T1) *
                     (deviceCount.data['staffDirector'].v / deviceCount.total) *
                     shebei
             ),
             水电费: keepTwoDecimal(
-                (1 / 6) *
+                (r.D1 / r.T1) *
                     (squareCount.data['staffDirector'].v / squareCount.total) *
                     shui
             ),
             行政老师工资: keepTwoDecimal(
-                (1 / 3) * salary['staffDirector'].gangwei.data['吕老师岗位工资']
+                (r.D2 / r.T2) *
+                    salary['staffDirector'].gangwei.data['刘璐老师岗位工资'] +
+                    (r.D3 / r.T3) *
+                        salary['staffDirector'].gangwei.data['吕老师岗位工资'] +
+                    (r.D4 / r.T4) *
+                        salary['staffDirector'].gangwei.data[
+                            '刘剑飞老师岗位工资'
+                        ]
             ),
             办公费用: keepTwoDecimal(
-                (1 / 6) *
+                (r.D1 / r.T1) *
                     (peopleCount.data['staffDirector'].v / peopleCount.total) *
                     bangong
             ),
-            活动经费: keepTwoDecimal((1 / 4) * huodong),
+            活动经费: keepTwoDecimal((r.D5 / r.T5) * huodong),
             学院管理: keepTwoDecimal(
-                (((1 / 6) * peopleCount.data['staffDirector'].v) /
+                (((r.D1 / r.T1) * peopleCount.data['staffDirector'].v) /
                     (peopleCount.data['staffDirector'].v +
                         peopleCount.data['studyDirector'].v)) *
                     res['学院管理'].total
@@ -509,6 +541,8 @@ export const exportData = () => {
         data['科研竞赛']['学院管理'] +
         data['科研竞赛']['办公费用'] +
         data['科研竞赛']['实验耗材']
+
+    console.log(data)
 
     // 思政课程教学总计
     const sizhengM =
@@ -692,7 +726,7 @@ export const exportData = () => {
                 console.log('kv', k, v1)
                 // k是老师名字，v1是岗位工资，其他是分配情况
                 if (k.match(/吕/)) {
-                    // 如果是赵老师
+                    // 如果是刘璐老师
                     return {
                         工资: k,
                         总费用: v1,

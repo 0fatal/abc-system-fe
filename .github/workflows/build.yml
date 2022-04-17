@@ -1,0 +1,34 @@
+name: build
+on:
+  push:
+    branches:
+      - shengguangji
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-node@v2
+      with:
+        node-version: 14.x
+    - name: npm install and build
+      run: |
+        npm install
+        npm run build
+    - name: Uptoc Action
+      uses: saltbo/uptoc@v1.4.3
+      with:
+        # specify driver for the cloud platform
+        driver: qiniu
+        # specify region of the cloud platform
+        region: cn-east-1
+        # specify bucket name of the cloud platform
+        bucket: abc-system
+        # specify exclude the given comma separated directories
+        # specify dist of the local directory
+        dist: dist
+        saveroot: shengguangji
+      env:
+        UPTOC_UPLOADER_AK: ${{ secrets.QINIU_ACCESS_KEY }}
+        UPTOC_UPLOADER_SK: ${{ secrets.QINIU_SECRET_KEY }}
+

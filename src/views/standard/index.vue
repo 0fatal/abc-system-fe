@@ -39,13 +39,70 @@
                 ></el-input>
             </el-form-item>
         </el-form>
+        <div class="h-[50px]"></div>
+        <h1
+            v-if="$store.getters.getRole === 'staffDirector'"
+            class="text-left ml-[50px]"
+        >
+            分配比例
+        </h1>
+        <el-table
+            class="mx-[50px]"
+            :data="tableData"
+            border
+            style="width: 100%"
+            v-if="$store.getters.getRole === 'staffDirector'"
+        >
+            <el-table-column fixed prop="type" label="" width="150">
+            </el-table-column>
+            <el-table-column fixed prop="学生管理" label="学生管理" width="150">
+                <template slot-scope="scope">
+                    <el-input
+                        v-model="tableData[scope.$index]['学生管理']"
+                    ></el-input>
+                </template>
+            </el-table-column>
+            <el-table-column fixed prop="党团建设" label="党团建设" width="150">
+                <template slot-scope="scope">
+                    <el-input
+                        v-model="tableData[scope.$index]['党团建设']"
+                    ></el-input>
+                </template>
+            </el-table-column>
+            <el-table-column fixed prop="社团管理" label="社团管理" width="150">
+                <template slot-scope="scope">
+                    <el-input
+                        v-model="tableData[scope.$index]['社团管理']"
+                    ></el-input> </template
+            ></el-table-column>
+            <el-table-column fixed prop="科研竞赛" label="科研竞赛" width="150">
+                <template slot-scope="scope">
+                    <el-input
+                        v-model="tableData[scope.$index]['科研竞赛']"
+                    ></el-input> </template
+            ></el-table-column>
+            <el-table-column
+                fixed
+                prop="思政课程教学"
+                label="思政课程教学"
+                width="150"
+            >
+                <template slot-scope="scope">
+                    <el-input
+                        :disabled="
+                            tableData[scope.$index]['思政课程教学'] === null
+                        "
+                        v-model="tableData[scope.$index]['思政课程教学']"
+                    ></el-input> </template
+            ></el-table-column>
+        </el-table>
         <el-backtop target=".common-card"></el-backtop>
     </el-card>
 </template>
 
 <script>
 import { getRoleName, Route2MenuItemNameMap } from '@/role/role'
-import { confirmInput } from '@/utils/storage'
+import { confirmInput, getRate } from '@/utils/storage'
 
 export default {
     data() {
@@ -56,6 +113,7 @@ export default {
                 // 保存每个下拉框值的变量
                 standardItems: [],
             },
+            tableData: [],
         }
     },
     methods: {
@@ -65,7 +123,8 @@ export default {
             confirmInput(
                 this.$store.getters.getRole,
                 this.$route.path,
-                this.form.standardItems
+                this.form.standardItems,
+                this.tableData
             )
             this.$message.success('保存成功！')
         },
@@ -77,6 +136,8 @@ export default {
     created() {
         this.$store.getters.getRole
         this.form.standardItems = this.$store.getters.getStandardItems
+        console.log(getRate())
+        this.tableData = getRate()
     },
 
     // 页面关闭前保存填写到缓存，但不保存到本地

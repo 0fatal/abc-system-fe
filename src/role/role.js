@@ -34,37 +34,23 @@ export const roleMap = {
     },
 }
 
-export const assetsMap = 
-    {
-        president: {
-            routes: [
-                '/assets/college',
-                '/assets/office',
-                '/assets/standard',
-            ],
-        },
-        // 教科办主任
-        studyDirector: {
-            routes: [
-                '/assets/office',
-                '/assets/standard',
-            ],
-        },
-        // 学院办主任
-        collegeDirector: {
-            routes: [
-                '/assets/office',
-                '/assets/standard',
-            ],
-        },
-        // 学工办主任
-        staffDirector: {
-            routes: [
-                '/assets/office',
-                '/assets/standard',
-            ],
-        },
-    }
+export const assetsMap = {
+    president: {
+        routes: ['/assets/college', '/assets/office', '/assets/standard'],
+    },
+    // 教科办主任
+    studyDirector: {
+        routes: ['/assets/office', '/assets/standard'],
+    },
+    // 学院办主任
+    collegeDirector: {
+        routes: ['/assets/office', '/assets/standard'],
+    },
+    // 学工办主任
+    staffDirector: {
+        routes: ['/assets/office', '/assets/standard'],
+    },
+}
 
 export const getRoleName = (role) => {
     return {
