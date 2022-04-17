@@ -3,7 +3,6 @@ import CryptoES from 'crypto-es'
 
 const accessKey = 'pBMT1ZU--PnUbI2HslUZuQQOdglYJhNLGL65H7JA'
 const secretKey = 'o8Ag2Z5UhCd2-AJ-eiTXtFKhBl5f06776LODielf'
-const bucket = 'abc-system-fe'
 
 var base64EncodeChars =
     'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_'
@@ -72,6 +71,8 @@ const urlsafencode = (jsonFlags) => {
 }
 
 export const uploadFile = (file, filename) => {
+    const bucket = 'abc-system-fe:tmp\\' + filename
+
     return new Promise((resolve, reject) => {
         const options = {
             scope: bucket,
@@ -92,7 +93,7 @@ export const uploadFile = (file, filename) => {
         const token = accessKey + ':' + encodedSign + ':' + encodedPutPolicy
 
         const putExtra = {
-            fname: '111.xlsx', // 文件原文件名
+            fname: '', // 文件原文件名
             params: {}, // 用来放置自定义变量
             mimeType: null, // 用来限制上传文件类型，为 null 时表示不对文件类型限制；eg: ["image/png", "image/jpeg"]
         }
