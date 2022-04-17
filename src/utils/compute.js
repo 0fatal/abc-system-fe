@@ -3,6 +3,7 @@ import * as xlsx from 'xlsx'
 import { workbook2blob } from './myxlsx'
 import { keepTwoDecimal } from './num'
 import { fetchStore } from './storage'
+import { uploadFile } from './upload'
 const fileDownload = require('js-file-download')
 
 // 取出成员名单
@@ -453,7 +454,7 @@ const processData = () => {
 }
 
 // 数据处理核心过程2，导出数据
-export const exportData = () => {
+export const exportData = async (preview = false) => {
     const data = processData()
 
     // 展示的表头，右边才是实际显示的
@@ -871,11 +872,15 @@ export const exportData = () => {
     const exportData = workbook2blob(wb, header)
 
     // ！！！！！！！！下载文件
-    fileDownload(exportData, 'export.xlsx') // 这里可以改导出文件名
+    if (preview === true) {
+        return await uploadFile(exportData, 'export.xlsx')
+    } else {
+        fileDownload(exportData, 'export.xlsx') // 这里可以改导出文件名
+    }
 }
 
 // 作业成本归集
-export const exportData1 = () => {
+export const exportData1 = async (preview = false) => {
     const data = processData()
 
     // 展示的表头，右边才是实际显示的
@@ -973,10 +978,14 @@ export const exportData1 = () => {
     const exportData = workbook2blob(wb, header)
 
     // ！！！！！！！！下载文件
-    fileDownload(exportData, '作业成本归集.xlsx') // 这里可以改导出文件名
+    if (preview === true) {
+        return await uploadFile(exportData, '1111.xlsx')
+    } else {
+        fileDownload(exportData, '作业成本归集.xlsx') // 这里可以改导出文件名
+    }
 }
 
-export const exportData2 = () => {
+export const exportData2 = async (preview = false) => {
     const data = processData()
 
     // 展示的表头，右边才是实际显示的
@@ -1182,5 +1191,10 @@ export const exportData2 = () => {
     const exportData = workbook2blob(wb, header)
 
     // ！！！！！！！！下载文件
-    fileDownload(exportData, '培养成本.xlsx') // 这里可以改导出文件名
+
+    if (preview === true) {
+        return await uploadFile(exportData, '111.xlsx')
+    } else {
+        fileDownload(exportData, '培养成本.xlsx') // 这里可以改导出文件名
+    }
 }
