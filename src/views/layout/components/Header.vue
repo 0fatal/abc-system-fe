@@ -36,7 +36,7 @@ export default {
     data() {
         return {
             collegeOptions: [
-                '卓越学院',
+                '委培学院',
                 '圣光机联合学院',
                 '继续教育学院',
                 '国际教育学院',
@@ -53,7 +53,7 @@ export default {
 
     watch: {
         collegeValue(val) {
-            if (val === '卓越学院') {
+            if (val === '委培学院') {
                 if (process.env.NODE_ENV === 'development') {
                     window.location.href = 'http://localhost:8080'
                 } else {
