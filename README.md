@@ -1,6 +1,6 @@
 # 委培学院 ABC 系统
 
-#### **线上地址**：https://abc-system-fe.pages.dev
+#### **线上地址**：https://v2.abc-system-fe.pages.dev
 
 ---
 
